@@ -60,7 +60,7 @@ public class BoatScript : MonoBehaviour {
 		Rigidbody.AddForce (force * forceScale, ForceMode2D.Force);
 
 
-		GameObject.FindWithTag ("Fish").SendMessage ("UpdateForce",force * forceScale);
+//		GameObject.FindWithTag ("Fish").SendMessage ("UpdateForce",force * forceScale);
 
 	}
 

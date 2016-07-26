@@ -18,6 +18,10 @@ public class FishScript : MonoBehaviour {
 	bool outCircle;
 	float distance;
 	Vector3 nextTarget;
+	public float forceScale;
+	public float minForce;
+	public float maxForce;
+	Animator anim;
 
 	void Start () {
 		InitData ();
@@ -26,7 +30,7 @@ public class FishScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
+
 		if (Physics2D.CircleCast (transform.position, 1.5f,transform.up,0.5f,(1<<LayerMask.NameToLayer("Stone")|1<<LayerMask.NameToLayer("Bank")))  && !hasChangeDirection) {
 
 			GameObject hit = Physics2D.CircleCast (transform.position, 1.5f,transform.up,0.5f,(1<<LayerMask.NameToLayer("Stone")|1<<LayerMask.NameToLayer("Bank"))).collider.gameObject;
@@ -56,6 +60,8 @@ public class FishScript : MonoBehaviour {
 		enterCircle = false;
 		outCircle = true;
 		distance = 0;
+		anim = gameObject.GetComponent<Animator> ();
+		anim.SetFloat ("speed",1);
 	}
 
 	public void ChangeDirection(){
@@ -87,18 +93,26 @@ public class FishScript : MonoBehaviour {
 			RandomMoveInCircle ();
 
 		}
+		if (col.gameObject.tag == "Ripple" && !enterCircle) {
+			Debug.Log ("碰到涟漪了");
+			RippleScript script = col.gameObject.GetComponentInParent<RippleScript> ();
+			float impact = script.Impact;
+			Vector3 force = impact * (transform.position - col.gameObject.transform.position).normalized;
+			UpdateVelocityByCombineNewForce (new Vector2(force.x, force.y));
+		} 
 	}
 
 
 	void RandomMoveInCircle()
 	{
+		anim.SetFloat ("speed",2f);
 		float angle = Random.Range (0, 2 * Mathf.PI);
 		float r = Random.Range (MinRadius, MaxRadius);
 		if(distance > 5.5)
 			nextTarget = boat.transform.position;
 		else
 			nextTarget = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * r + boat.transform.position;
-//		Debug.DrawLine(transform.position)
+		//		Debug.DrawLine(transform.position)
 
 		Vector3 horizontalDir = nextTarget - transform.position;
 		float rotateTowardsAngle = GetSignAngle (horizontalDir.normalized, transform.up.normalized);
@@ -125,8 +139,46 @@ public class FishScript : MonoBehaviour {
 
 	}
 
-	void UpdateForce(object receiveMessage){
-		Vector2 force = (Vector2)receiveMessage;
-		Debug.Log ("我收到广播了");
+	//	void UpdateForce(object receiveMessage){
+	//		Vector2 force = (Vector2)receiveMessage;
+	//		Debug.Log ("我收到广播了");
+	//	} 
+
+	void UpdateVelocityByCombineNewForce(Vector2 force) {
+		Vector2 currentForce = rigidFish.velocity;
+
+		Vector2 newForce = new Vector2 ();
+
+		if (force.x * currentForce.x > 0) {
+			newForce.x = MaxForce (force.x, currentForce.x) + MinForce(force.x, currentForce.x) * 0;
+		} else {
+			newForce.x = currentForce.x + force.x;
+		}
+		if (force.y * currentForce.y > 0) {
+			newForce.y = MaxForce (force.y, currentForce.y);
+		} else {
+			newForce.y = currentForce.y + force.y + MinForce(force.y, currentForce.y) * 0;
+		}
+		rigidFish.velocity = newForce*forceScale;
+		print("force:" + force*forceScale);
+		rigidFish.AddForce (force * forceScale, ForceMode2D.Force);
+
+
+
 	}
+
+	float MaxForce(float force1, float force2) {
+		if (Mathf.Abs (force1) > Mathf.Abs (force2)) {
+			return force1;
+		}
+		return force2;
+	}
+
+	float MinForce(float force1, float force2) {
+		if (Mathf.Abs (force1) > Mathf.Abs (force2)) {
+			return force2;
+		}
+		return force1;
+	}
+
 }
