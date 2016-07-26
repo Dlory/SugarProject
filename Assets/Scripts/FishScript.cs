@@ -22,6 +22,7 @@ public class FishScript : MonoBehaviour {
 	public float maxForce;
 	bool exitCircle;
 	Animator anim;
+	float time;
 
 	void Start () {
 		InitData ();
@@ -52,6 +53,15 @@ public class FishScript : MonoBehaviour {
 		if (enterCircle) {
 			distance = Vector3.Distance (transform.position, boat.transform.position);
 		}
+
+		if(time >= 3 && exitCircle){
+			enterCircle = false;
+			iTween.Stop (gameObject);
+			rigidFish.velocity = Vector3.zero;
+			DOTween.Kill(gameObject);
+			CancelInvoke ("ChangeDirection");
+			ChangeDirection ();
+		}
 	}
 
 	public void InitData(){
@@ -63,6 +73,7 @@ public class FishScript : MonoBehaviour {
 		anim = gameObject.GetComponent<Animator> ();
 		anim.SetFloat ("speed",1);
 		exitCircle = false;
+		time = 0;
 	}
 
 	public void ChangeDirection(){
@@ -105,7 +116,7 @@ public class FishScript : MonoBehaviour {
 	void OnTriggerExit2D(Collider2D col){
 		if (col.gameObject.tag == "MagicCircle") {
 			exitCircle = true;
-
+			time += Time.deltaTime;
 		}
 	}
 
