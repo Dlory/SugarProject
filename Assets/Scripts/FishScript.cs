@@ -10,7 +10,6 @@ public class FishScript : MonoBehaviour {
 	public float speed;
 	public float MaxRadius;
 	public float MinRadius;
-	public float circleSpeed;
 
 	public GameObject boat;
 	bool enterCircle;
@@ -21,6 +20,7 @@ public class FishScript : MonoBehaviour {
 	public float forceScale;
 	public float minForce;
 	public float maxForce;
+	bool exitCircle;
 	Animator anim;
 
 	void Start () {
@@ -62,6 +62,7 @@ public class FishScript : MonoBehaviour {
 		distance = 0;
 		anim = gameObject.GetComponent<Animator> ();
 		anim.SetFloat ("speed",1);
+		exitCircle = false;
 	}
 
 	public void ChangeDirection(){
@@ -100,6 +101,12 @@ public class FishScript : MonoBehaviour {
 			Vector3 force = impact * (transform.position - col.gameObject.transform.position).normalized;
 			UpdateVelocityByCombineNewForce (new Vector2(force.x, force.y));
 		} 
+	}
+	void OnTriggerExit2D(Collider2D col){
+		if (col.gameObject.tag == "MagicCircle") {
+			exitCircle = true;
+
+		}
 	}
 
 
