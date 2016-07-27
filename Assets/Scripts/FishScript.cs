@@ -61,6 +61,7 @@ public class FishScript : MonoBehaviour {
 			DOTween.Kill(gameObject);
 			CancelInvoke ("ChangeDirection");
 			ChangeDirection ();
+			time = 0;
 		}
 	}
 
@@ -102,6 +103,7 @@ public class FishScript : MonoBehaviour {
 			rigidFish.velocity = Vector3.zero;
 			DOTween.Kill(gameObject);
 			CancelInvoke ("ChangeDirection");
+			gameObject.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Color.white, Color.red, 2f);
 			RandomMoveInCircle ();
 
 		}
