@@ -9,7 +9,7 @@ public class PlayerFollowScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mainCamera = Camera.main;
-		player = gameObject.transform;
+		player = GameObject.FindGameObjectWithTag(Constant.TagPlayer).transform;
 
 		float orthographicSize = mainCamera.orthographicSize;
 		float aspectRatio = Screen.width / Screen.height;

@@ -49,9 +49,10 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: Fish1
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -22,7 +22,12 @@ public class FishScript : MonoBehaviour {
 	public float maxForce;
 	bool exitCircle;
 	Animator anim;
+	float exitTime;
+//	_2dxFX_Outline outline;
+
+
 	float time;
+	public float TargetValue;
 
 	void Start () {
 		InitData ();
@@ -42,26 +47,30 @@ public class FishScript : MonoBehaviour {
 			DOTween.Kill (gameObject);
 			if (enterCircle) {
 				hasChangeDirection = true;
+
 				RandomMoveInCircle ();
 			} 
 			else {
 				hasChangeDirection = true;
+
 				ChangeDirection ();
 			}
 		}
 
 		if (enterCircle) {
 			distance = Vector3.Distance (transform.position, boat.transform.position);
+//			outline.enabled = true;
+			//Light (2.0f);
 		}
 
-		if(time >= 3 && exitCircle){
+		if(exitTime >= 3 && exitCircle){
 			enterCircle = false;
 			iTween.Stop (gameObject);
 			rigidFish.velocity = Vector3.zero;
 			DOTween.Kill(gameObject);
 			CancelInvoke ("ChangeDirection");
 			ChangeDirection ();
-			time = 0;
+			exitTime = 0;
 		}
 	}
 
@@ -74,6 +83,10 @@ public class FishScript : MonoBehaviour {
 		anim = gameObject.GetComponent<Animator> ();
 		anim.SetFloat ("speed",1);
 		exitCircle = false;
+		exitTime = 0;
+//		outline = gameObject.GetComponent<_2dxFX_Outline> ();
+//		outline._OutLineSpread = 0;
+//		outline.enabled = false;
 		time = 0;
 	}
 
@@ -103,7 +116,8 @@ public class FishScript : MonoBehaviour {
 			rigidFish.velocity = Vector3.zero;
 			DOTween.Kill(gameObject);
 			CancelInvoke ("ChangeDirection");
-			gameObject.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Color.white, Color.red, 2f);
+			//gameObject.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Color.white, Color.red, 2f);
+			//Light(2);
 			RandomMoveInCircle ();
 
 		}
@@ -118,13 +132,14 @@ public class FishScript : MonoBehaviour {
 	void OnTriggerExit2D(Collider2D col){
 		if (col.gameObject.tag == "MagicCircle") {
 			exitCircle = true;
-			time += Time.deltaTime;
+			exitTime += Time.deltaTime;
 		}
 	}
 
 
 	void RandomMoveInCircle()
 	{
+		
 		anim.SetFloat ("speed",2f);
 		float angle = Random.Range (0, 2 * Mathf.PI);
 		float r = Random.Range (MinRadius, MaxRadius);
@@ -159,10 +174,6 @@ public class FishScript : MonoBehaviour {
 
 	}
 
-	//	void UpdateForce(object receiveMessage){
-	//		Vector2 force = (Vector2)receiveMessage;
-	//		Debug.Log ("我收到广播了");
-	//	} 
 
 	void UpdateVelocityByCombineNewForce(Vector2 force) {
 		Vector2 currentForce = rigidFish.velocity;
@@ -201,4 +212,14 @@ public class FishScript : MonoBehaviour {
 		return force1;
 	}
 
+//	public void Light(float duration){
+//		
+//		if(time<duration)
+//		{
+//			time += Time.deltaTime;
+//			outline._OutLineSpread += Time.deltaTime * (TargetValue / duration);
+//		}
+//
+//
+//	}
 }

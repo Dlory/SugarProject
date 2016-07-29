@@ -3,8 +3,9 @@ using System.Collections;
 
 public class MouseWaterSplash : MonoBehaviour {
 	public GameObject Ripple;
-	public GameObject RippleMove;
-	public float SpawnInterval = 0.25f;
+	public float SpawnMinInterval = 0.5f;
+	public float SpawnMinDistanceX = 2f;
+	public float SpawnMinDistanceY = 1f;
 
 	private Camera Camera;
 	private int layerMask;
@@ -27,11 +28,6 @@ public class MouseWaterSplash : MonoBehaviour {
 	void FixedUpdate() {
 		// Creating a splash line between previous position and current
 		if (GUIUtility.hotControl == 0 && (Input.GetMouseButton (0) || Input.touchCount > 0)) {
-			if (lastSpawnTime > 0 && Time.timeSinceLevelLoad - lastSpawnTime < SpawnInterval) {
-				return;
-			}
-			lastSpawnTime = Time.timeSinceLevelLoad;
-
 			// Creating a ray from camera to world
 			Vector2 point;
 			if (Input.GetMouseButton (0) == false) {
@@ -42,15 +38,43 @@ public class MouseWaterSplash : MonoBehaviour {
 
 			RaycastHit2D hit = Physics2D.Raycast (point, Vector2.zero, Mathf.Infinity, layerMask);
 			if (hit.collider != null) {
-				if (prevPoint == Vector2.zero || Vector2.Distance(prevPoint, hit.point) < 0.2f) {
-					Instantiate (Ripple, hit.point, transform.rotation);
-				} else {
-					Instantiate (RippleMove, hit.point, transform.rotation);
+				Debug.Log ("test");
+				Vector2 hitPoint = hit.point;
+				if (prevPoint != Vector2.zero && (Mathf.Abs(prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs(prevPoint.y - hitPoint.y) > SpawnMinDistanceY) ) {
+					SplashRipple (hitPoint);
+					lastSpawnTime = Time.timeSinceLevelLoad;
+					prevPoint = hitPoint;
+
+				} else if (Time.timeSinceLevelLoad - lastSpawnTime > SpawnMinInterval) {
+					SplashRipple (hitPoint);
+					lastSpawnTime = Time.timeSinceLevelLoad;
+					prevPoint = hitPoint;
 				}
-				prevPoint = hit.point;
 			}
 		} else {
+			if (prevPoint != Vector2.zero) {
+				//print ("放开了");
+			}
 			prevPoint = Vector2.zero;
 		}
+	}
+
+	void SplashRipple(Vector2 hitPoint) {
+		if (Ripple != null) {
+
+			GameObject gameObj = Instantiate (Ripple, hitPoint, transform.rotation) as GameObject;
+			RippleScript ripple = gameObj.GetComponent<RippleScript>();
+
+			if (prevPoint != Vector2.zero && (Mathf.Abs(prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs(prevPoint.y - hitPoint.y) > SpawnMinDistanceY)) {
+				float angle = AngleBetweenVector2 (prevPoint, hitPoint);
+				ripple.SplashRotated (Mathf.Deg2Rad * angle);
+			}
+		}
+	}
+
+	float AngleBetweenVector2(Vector2 vec1, Vector2 vec2) {
+		Vector2 diference = vec2 - vec1;
+		float sign = (vec2.y < vec1.y)? 1.0f : -1.0f;
+		return Vector2.Angle(Vector2.right, diference) * sign;
 	}
 }
