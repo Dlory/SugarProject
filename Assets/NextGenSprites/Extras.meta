@@ -1,13 +1,8 @@
 fileFormatVersion: 2
-guid: bad47ee39f1788046aebd18375b393b4
-labels:
-- Unity2d
-- Shaders
-- Scripting
-- Playmaker
+guid: 4dc16f996ee434a1fbb1c3ba8730ebff
 folderAsset: yes
-timeCreated: 1442675943
-licenseType: Store
+timeCreated: 1470361191
+licenseType: Free
 DefaultImporter:
   userData: 
   assetBundleName: 

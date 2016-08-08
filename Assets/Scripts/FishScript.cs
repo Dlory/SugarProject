@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using DG.Tweening;
 
@@ -7,25 +7,24 @@ using DG.Tweening;
 public class FishScript : MonoBehaviour {
 	// Use this for initialization
 	Rigidbody2D rigidFish;
-	public float speed;
+	float speed;
 	public float MaxRadius;
 	public float MinRadius;
 
-	public GameObject boat;
+	GameObject boat;
 	bool enterCircle;
 	bool hasChangeDirection;
-	bool outCircle;
 	float distance;
 	Vector3 nextTarget;
 	public float forceScale;
 	public float minForce;
 	public float maxForce;
-	bool exitCircle;
 	Animator anim;
-	float exitTime;
-//	_2dxFX_Outline outline;
 
 
+	GameObject fishLight;
+	Animator fishLightAnim;
+	bool tooFar;
 	float time;
 	public float TargetValue;
 
@@ -40,7 +39,7 @@ public class FishScript : MonoBehaviour {
 		if (Physics2D.CircleCast (transform.position, 1.5f,transform.up,0.5f,(1<<LayerMask.NameToLayer("Stone")|1<<LayerMask.NameToLayer("Bank")))  && !hasChangeDirection) {
 
 			GameObject hit = Physics2D.CircleCast (transform.position, 1.5f,transform.up,0.5f,(1<<LayerMask.NameToLayer("Stone")|1<<LayerMask.NameToLayer("Bank"))).collider.gameObject;
-			Debug.Log (hit.layer);
+			Debug.Log (hit.name);
 			rigidFish.velocity = Vector3.zero;
 			CancelInvoke ();
 			iTween.Stop (gameObject);
@@ -52,42 +51,45 @@ public class FishScript : MonoBehaviour {
 			} 
 			else {
 				hasChangeDirection = true;
-
 				ChangeDirection ();
+
 			}
 		}
 
 		if (enterCircle) {
 			distance = Vector3.Distance (transform.position, boat.transform.position);
-//			outline.enabled = true;
-			//Light (2.0f);
+
+		} 
+		else {
+
+			distance = 0;
 		}
 
-		if(exitTime >= 3 && exitCircle){
-			enterCircle = false;
-			iTween.Stop (gameObject);
-			rigidFish.velocity = Vector3.zero;
-			DOTween.Kill(gameObject);
-			CancelInvoke ("ChangeDirection");
-			ChangeDirection ();
-			exitTime = 0;
-		}
 	}
 
 	public void InitData(){
+		boat = GameObject.FindWithTag ("Player");
 		rigidFish = gameObject.GetComponent<Rigidbody2D> ();
+
+		fishLight = gameObject.transform.GetChild (0).gameObject;
+
+		speed = 1;
 		hasChangeDirection = false;
 		enterCircle = false;
-		outCircle = true;
+		//outCircle = true;
 		distance = 0;
 		anim = gameObject.GetComponent<Animator> ();
+		fishLightAnim = fishLight.GetComponent<Animator> ();
 		anim.SetFloat ("speed",1);
-		exitCircle = false;
-		exitTime = 0;
-//		outline = gameObject.GetComponent<_2dxFX_Outline> ();
-//		outline._OutLineSpread = 0;
-//		outline.enabled = false;
+
+
+		fishLightAnim.SetFloat ("speed", 1);
+
 		time = 0;
+		tooFar = false;
+		Color a = fishLight.transform.GetComponent<SpriteRenderer> ().color;
+		a.a = 0;
+		fishLight.transform.GetComponent<SpriteRenderer> ().color = a;
 	}
 
 	public void ChangeDirection(){
@@ -99,28 +101,43 @@ public class FishScript : MonoBehaviour {
 		else {
 			turnBackAngle = new Vector3 (0, 0, nowRotation.z + Random.Range(-90,90));
 		}
-		iTween.RotateTo (gameObject, iTween.Hash ("rotation", turnBackAngle, "time", Mathf.Abs (nowRotation.z - turnBackAngle.z) / 60, "easeType", iTween.EaseType.linear, "oncomplete", "Move", "oncompletetarget", gameObject));
+		iTween.RotateTo (gameObject, iTween.Hash ("rotation", turnBackAngle, "time", Mathf.Abs (nowRotation.z - turnBackAngle.z) / 60, "easetype", iTween.EaseType.linear, "oncomplete", "Move", "oncompletetarget", gameObject));
 	}
 
 	public void Move(){
+		float duration = Random.Range (0.8f, 3);
+		if (duration < 1.5f) {
+			speed = 1;
+		} 
+		else if (duration < 2.2) {
+			speed = 2;
+		} 
+		else {
+			speed = 3;
+		}
 		hasChangeDirection = false;
 		rigidFish.velocity = transform.up*speed;
-		Invoke ("ChangeDirection", Random.Range (0.8f, 3));
+		Invoke ("ChangeDirection", duration);
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
-		if (col.gameObject.tag == "MagicCircle" && !enterCircle) {
-			enterCircle = true;
-			Debug.Log (gameObject.name + " Enter");
-			iTween.Stop (gameObject);
-			rigidFish.velocity = Vector3.zero;
-			DOTween.Kill(gameObject);
-			CancelInvoke ("ChangeDirection");
-			//gameObject.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Color.white, Color.red, 2f);
-			//Light(2);
-			RandomMoveInCircle ();
+		if (col.gameObject.tag == "MagicCircle") {
+			//if (!enterCircle) {
+				tooFar = false;
+				enterCircle = true;
+				Debug.Log (gameObject.name + " Enter");
+				iTween.Stop (gameObject);
+				rigidFish.velocity = Vector3.zero;
+				DOTween.Kill (gameObject);
+				DOTween.Kill (fishLight);
+				CancelInvoke ("ChangeDirection");
+				FishLight (1,new Color(255,248,0));
+				RandomMoveInCircle ();
+			//} 
 
 		}
+
+
 		if (col.gameObject.tag == "Ripple" && !enterCircle) {
 			Debug.Log ("碰到涟漪了");
 			RippleScript script = col.gameObject.GetComponentInParent<RippleScript> ();
@@ -130,41 +147,65 @@ public class FishScript : MonoBehaviour {
 		} 
 	}
 	void OnTriggerExit2D(Collider2D col){
-		if (col.gameObject.tag == "MagicCircle") {
-			exitCircle = true;
-			exitTime += Time.deltaTime;
+		Debug.Log ("此时的alpha值是" + fishLight.transform.GetComponent<SpriteRenderer>().color.a);
+		FishLight (0,Color.white);
+		float time = 0;
+		time += Time.deltaTime;
+		if (time >= 2) {
+			rigidFish.velocity = Vector3.zero;
+			//DOTween.Kill (gameObject);
+
+			//DOTween.Kill (fishLight);
+			DOTween.KillAll();
+			enterCircle = false;
+			tooFar = false;
+			ChangeDirection ();
 		}
 	}
 
 
 	void RandomMoveInCircle()
 	{
-		
-		anim.SetFloat ("speed",2f);
 		float angle = Random.Range (0, 2 * Mathf.PI);
 		float r = Random.Range (MinRadius, MaxRadius);
-		if(distance > 5.5)
+		if (distance > 5.5) {
+			tooFar = true;
+			Debug.Log (" Rotatet Too far : " + Vector3.Distance (boat.transform.position, transform.position));
 			nextTarget = boat.transform.position;
-		else
+			anim.SetFloat ("speed",2);
+			fishLightAnim.SetFloat ("speed",2);
+		}
+		else {
 			nextTarget = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * r + boat.transform.position;
-		//		Debug.DrawLine(transform.position)
+			anim.SetFloat ("speed",0.8f);
+			fishLightAnim.SetFloat ("speed",0.8f);
+			Debug.DrawLine (transform.position, nextTarget, Color.red, 10);
+		}
+
+
 
 		Vector3 horizontalDir = nextTarget - transform.position;
 		float rotateTowardsAngle = GetSignAngle (horizontalDir.normalized, transform.up.normalized);
-		transform.DORotate(new Vector3(0, 0, rotateTowardsAngle + transform.localEulerAngles.z), Mathf.Abs(rotateTowardsAngle)/120).OnComplete(moveToTarget);
+		transform.DORotate(new Vector3(0, 0, rotateTowardsAngle + transform.localEulerAngles.z), Mathf.Abs(rotateTowardsAngle)/120).SetId (gameObject).OnComplete(moveToTarget);
 
 
 	}
 
+
 	private void moveToTarget(){
-		if (distance > 5.5 && outCircle) {
-			nextTarget = boat.transform.position;
+		Debug.Log (tooFar);
+		if (distance > 5.5 && !tooFar) {
+
+			Debug.Log (" Move Too far : " + Vector3.Distance (boat.transform.position, transform.position));
 			RandomMoveInCircle ();
-			outCircle = false;
 		} 
 		else {
-			hasChangeDirection = false;
-			transform.DOMove (nextTarget, Vector3.Distance (nextTarget, transform.position) / speed / 3, false).OnComplete (RandomMoveInCircle).SetId (gameObject);
+			if (tooFar) {
+				transform.DOMove (nextTarget, Vector3.Distance (nextTarget, transform.position) / (speed * 2), false).OnComplete (RandomMoveInCircle).SetId (gameObject);
+			} 
+			else {
+				transform.DOMove (nextTarget, Vector3.Distance (nextTarget, transform.position) / (speed * 0.8f), false).OnComplete (RandomMoveInCircle).SetId (gameObject);
+			}
 		}
 	}
 
@@ -212,14 +253,18 @@ public class FishScript : MonoBehaviour {
 		return force1;
 	}
 
-//	public void Light(float duration){
-//		
-//		if(time<duration)
-//		{
-//			time += Time.deltaTime;
-//			outline._OutLineSpread += Time.deltaTime * (TargetValue / duration);
-//		}
-//
-//
-//	}
+
+	public void FishLight(int alpha,Color color){
+		if (fishLight.transform.GetComponent<SpriteRenderer> ().color.a < alpha) {
+			fishLight.transform.GetComponent<SpriteRenderer> ().DOFade (alpha, 2 * (alpha - fishLight.transform.GetComponent<SpriteRenderer> ().color.a)).SetId(fishLight);
+			fishLight.transform.GetComponent<SpriteRenderer> ().DOColor (color, 2 * (alpha - fishLight.transform.GetComponent<SpriteRenderer> ().color.a));
+		}
+		else{
+			
+			fishLight.transform.GetComponent<SpriteRenderer> ().DOFade (alpha, 2 * (fishLight.transform.GetComponent<SpriteRenderer> ().color.a - alpha)).SetId(fishLight);
+			fishLight.transform.GetComponent<SpriteRenderer> ().DOColor (color, 2 * (fishLight.transform.GetComponent<SpriteRenderer> ().color.a - alpha)).SetId(fishLight);
+			Debug.Log ("目标alpha值为" + alpha + "，此时的alpha值是" + fishLight.transform.GetComponent<SpriteRenderer>().color.a);
+		}
+	}
+
 }

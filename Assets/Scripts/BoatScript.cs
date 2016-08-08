@@ -1,54 +1,89 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum BoatStatus {
+	Idle = 0,
+	ReadyToFly = 1,
+	Flying = 2,
+};
+
 public class BoatScript : MonoBehaviour {
-	public float joyfulPoint = 0;
-	public float attractionArea {
-		get { return joyfulPoint * 2.0f; }
+	public BoatStatus Status;
+	public float JoyfulPoint = 0;
+	public float AttractionArea {
+		get { return JoyfulPoint * 2.0f; }
 	}
 	private Rigidbody2D Rigidbody2D;
-	private Vector2 PreviousFrameVelocity = Vector3.zero;
-	private Animator anim;
+	private Collider2D PlayerCollider2D;
+	private Animator Anim;
+	private Vector2 FirstTouchPoint;
+
 	private int FlyActionHash = Animator.StringToHash("Fly");
 	private int ShakeActionHash = Animator.StringToHash("Shake");
+	private int PlayerLayer;
 
 	void Start() {
 		Rigidbody2D = GetComponent<Rigidbody2D> ();
-		anim = GetComponent<Animator> ();
+		Anim = GetComponent<Animator> ();
+		PlayerCollider2D = GetComponent<Collider2D> ();
+
+		FirstTouchPoint = Vector2.zero;
+		PlayerLayer = LayerMask.NameToLayer ("Player");
 	}
 
 	void Update(){
-		PreviousFrameVelocity = Rigidbody2D.velocity;
-		anim.SetBool (FlyActionHash, Input.GetKey (KeyCode.Z));
-		anim.SetBool (ShakeActionHash, Input.GetKey (KeyCode.X));
+		if (GUIUtility.hotControl == 0 && (Input.GetMouseButton (0) || Input.touchCount > 0)) {
+			Vector2 point;
+			if (Input.GetMouseButton (0) == false) {
+				point = Camera.main.ScreenToWorldPoint (Input.touches [0].position);
+			} else {
+				point = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			}
+
+			RaycastHit2D hit = Physics2D.Raycast (point, Vector2.zero, 100, PlayerLayer);
+			if (hit.collider) {
+				if (FirstTouchPoint == Vector2.zero) {
+					FirstTouchPoint = point;
+				}
+				if (Vector2.Distance (FirstTouchPoint, point) > 1) {
+					Vector2 v = point - FirstTouchPoint;
+					print ("v " + v);
+				}
+			}
+		} else {
+			FirstTouchPoint = Vector2.zero;
+		}
+
+		// Anim.SetBool (FlyActionHash, Input.GetKey (KeyCode.Z));
+		// Anim.SetBool (ShakeActionHash, Input.GetKey (KeyCode.X));
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		string tag = other.gameObject.tag;
-
-		if (tag == Constant.TagRipple) {
-			RippleScript script = other.gameObject.GetComponentInParent<RippleScript> ();
-			float impact = script.Impact;
-			Vector3 force = impact * (transform.position - other.gameObject.transform.position).normalized;
-			UpdateVelocityByCombineNewForce (new Vector2(force.x, force.y));
-		} else if (tag == Constant.TagFragment) {
-			// TODO 做收集动画
-			BroadcastSystem.defaultBoardcast.SendMessage (GameGUI.FragmenCollectEvent, other.gameObject, null);
-			Destroy(other.gameObject);
+		if (PlayerCollider2D.IsTouching (other)) {
+			string tag = other.gameObject.tag;
+			if (tag == Constant.TagRipple) {
+				RippleScript script = other.gameObject.GetComponentInParent<RippleScript> ();
+				float impact = script.Impact;
+				Vector3 force = impact * (transform.position - other.gameObject.transform.position).normalized;
+				UpdateVelocityByCombineNewForce (new Vector2(force.x, force.y));
+			} else if ( tag == Constant.TagFragment) {
+				// TODO 做收集动画
+				BroadcastSystem.defaultBoardcast.SendMessage (GameGUI.FragmenCollectEvent, other.gameObject, null);
+				Destroy(other.gameObject);
+			}
 		}
 	}
 
-	// TODO 多个波加入的时候对力的影响的作用优化
 	void UpdateVelocityByCombineNewForce(Vector2 force) {
 		Vector2 velocity = Rigidbody2D.velocity;
 		Vector2 impact = Vector2.zero;
 
-		if (force.x * velocity.x < 0) {
+		if (force.x * velocity.x < 0) { //力的方向与移动方向一致
 			impact.x = force.x;
 		} else {
 			impact.x = Mathf.Abs (force.x) > Mathf.Abs (velocity.x) ? force.x - velocity.x : 0;
 		}
-		if (force.y * velocity.y < 0) {
+		if (force.y * velocity.y < 0) { //力的方向与移动方向一致
 			impact.y = force.y;
 		} else {
 			impact.y = Mathf.Abs (force.y) > Mathf.Abs (velocity.y) ? force.y - velocity.y : 0;
