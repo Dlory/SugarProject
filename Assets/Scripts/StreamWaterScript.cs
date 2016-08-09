@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class StreamWaterScript : MonoBehaviour {
 	public float Force = 1;
 	public bool Inverse = false;
-
+	public Collider2D[] FixForces;
 
 	bool m_Inverse {
 		set {
@@ -43,14 +43,14 @@ public class StreamWaterScript : MonoBehaviour {
 			if (colliders != null) {
 				foreach (BoxCollider2D c in colliders) {
 					if (c != Collider2D && c.IsTouching (other)) {
-						AddForceByCollider (c);
+						BoatRigidbody.AddForce (ForceAtCollider (c), ForceMode2D.Force);
 					}
 				}
 			}
 		}
 	}
 
-	void AddForceByCollider(BoxCollider2D collider) {
+	Vector2 ForceAtCollider(BoxCollider2D collider) {
 		Vector3 rotation = collider.gameObject.transform.rotation.eulerAngles;
 		float rad = Mathf.Deg2Rad * rotation.z;
 
@@ -59,10 +59,19 @@ public class StreamWaterScript : MonoBehaviour {
 		float x = Mathf.Cos(angle) * (target.x) - Mathf.Sin(angle) * (target.y);
 		float y = Mathf.Cos(angle) * (target.y) + Mathf.Sin(angle) * (target.x);
 		Vector2 v = new Vector2(x, y);
+		Vector2 force =  Force * v * -1;
 
-		Vector2 force =  Force * v * (Inverse ? -1 : 1);
-//		BoatRigidbody.velocity = Force * force;
-		BoatRigidbody.AddForce (Force * force, ForceMode2D.Force);
+		bool isFixForce = false;
+		foreach(Collider2D c in FixForces) {
+			if (c == collider) {
+				isFixForce = true;
+				break;
+			}
+		}
+		if (!isFixForce) {
+			force *= (Inverse ? -1 : 1);
+		}
+
+		return force;
 	}
-
 }

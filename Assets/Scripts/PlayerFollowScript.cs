@@ -20,7 +20,7 @@ public class PlayerFollowScript : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
 		if (boundsSize == null || boundsSize == Vector2.zero) {
 			float x = player.position.x;
 			float y = player.position.y;

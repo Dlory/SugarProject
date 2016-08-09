@@ -8,54 +8,67 @@ public enum BoatStatus {
 };
 
 public class BoatScript : MonoBehaviour {
-	public BoatStatus Status;
+	public BoatStatus Status = BoatStatus.Idle;
 	public float JoyfulPoint = 0;
-	public float AttractionArea {
-		get { return JoyfulPoint * 2.0f; }
-	}
-	private Rigidbody2D Rigidbody2D;
-	private Collider2D PlayerCollider2D;
-	private Animator Anim;
-	private Vector2 FirstTouchPoint;
+	public Vector3 ParabolaSimulateForce = new Vector3(3, 10, 0);
+	public GameObject ShadowSprite;
 
-	private int FlyActionHash = Animator.StringToHash("Fly");
-	private int ShakeActionHash = Animator.StringToHash("Shake");
-	private int PlayerLayer;
+	BoatStatus m_Status = BoatStatus.Idle;
+	Rigidbody2D Rigidbody2D;
+	Collider2D PlayerCollider2D;
+
+	FlyingSimulator FlyingSim;
+	Vector2 FlyingDirection = Vector2.zero;
+	Vector3 FlyingSrcPos = Vector3.zero;
+	Vector3 ShadowSpriteOffset;
+	Animator BoatAnim;
+	Animator ShadowAnim;
+	int PlayerLayer;
 
 	void Start() {
 		Rigidbody2D = GetComponent<Rigidbody2D> ();
-		Anim = GetComponent<Animator> ();
+		BoatAnim = GetComponent<Animator> ();
 		PlayerCollider2D = GetComponent<Collider2D> ();
-
-		FirstTouchPoint = Vector2.zero;
 		PlayerLayer = LayerMask.NameToLayer ("Player");
+
+		if (ShadowSprite) {
+			ShadowSpriteOffset = ShadowSprite.transform.position - this.transform.position;
+			ShadowAnim = ShadowSprite.GetComponent<Animator> ();
+		}
 	}
 
 	void Update(){
-		if (GUIUtility.hotControl == 0 && (Input.GetMouseButton (0) || Input.touchCount > 0)) {
-			Vector2 point;
-			if (Input.GetMouseButton (0) == false) {
-				point = Camera.main.ScreenToWorldPoint (Input.touches [0].position);
-			} else {
-				point = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			}
-
-			RaycastHit2D hit = Physics2D.Raycast (point, Vector2.zero, 100, PlayerLayer);
-			if (hit.collider) {
-				if (FirstTouchPoint == Vector2.zero) {
-					FirstTouchPoint = point;
-				}
-				if (Vector2.Distance (FirstTouchPoint, point) > 1) {
-					Vector2 v = point - FirstTouchPoint;
-					print ("v " + v);
-				}
-			}
-		} else {
-			FirstTouchPoint = Vector2.zero;
-		}
+		UpdateStatusIfNeedly (Status);
 
 		// Anim.SetBool (FlyActionHash, Input.GetKey (KeyCode.Z));
 		// Anim.SetBool (ShakeActionHash, Input.GetKey (KeyCode.X));
+
+		if (Status == BoatStatus.Flying) {
+			if (Camera.main.orthographicSize <= 7.68f) {
+				CameraSmoothZoom zoomer = Camera.main.GetComponent<CameraSmoothZoom> ();
+				zoomer.ZoomCameraOrthographicSize (12f, 0f, 1f);
+			}
+
+			float angle = Vector2.Angle(Vector2.right, FlyingDirection) * (FlyingDirection.y < 0 ? -1 : 1);
+			float flyingHeight = FlyingSim.gameObject.transform.position.y;
+			Vector3 transformedPos = FlyingSim.gameObject.transform.position;
+			transformedPos = Quaternion.AngleAxis (90, Vector3.right) * transformedPos;
+			transformedPos = Quaternion.AngleAxis (angle, Vector3.forward)  * transformedPos;
+			transformedPos = Quaternion.AngleAxis (-45, Vector3.right) * transformedPos;
+			transformedPos = transformedPos + FlyingSrcPos;
+
+			transform.position = new Vector3(transformedPos.x, transformedPos.y, transform.position.z);
+			ShadowSprite.transform.localPosition = ShadowSpriteOffset +  Quaternion.AngleAxis (-45, Vector3.right) * new Vector3(0, -flyingHeight, 0);
+
+			if (!FlyingSim.flying) {
+				Status = BoatStatus.Idle;
+
+				if (Camera.main.orthographicSize > 7.68f) {
+					CameraSmoothZoom zoomer = Camera.main.GetComponent<CameraSmoothZoom> ();
+					zoomer.ZoomCameraOrthographicSize (7.68f, 0.1f, 1f);
+				}
+			}
+		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -89,5 +102,35 @@ public class BoatScript : MonoBehaviour {
 			impact.y = Mathf.Abs (force.y) > Mathf.Abs (velocity.y) ? force.y - velocity.y : 0;
 		}
 		Rigidbody2D.AddForce (impact, ForceMode2D.Impulse);
+	}
+
+	void UpdateStatusIfNeedly(BoatStatus status) {
+		if (m_Status != status) {
+			m_Status = status;
+
+			Collider2D[] colliders = GetComponentsInChildren<Collider2D> ();
+			foreach (Collider2D c in colliders) {
+				c.enabled = m_Status != BoatStatus.Flying;
+				print ("enable " + m_Status);
+			}
+
+			int FlyActionHash = Animator.StringToHash("Fly");
+
+			if (ShadowAnim) {
+				ShadowAnim.SetBool (FlyActionHash, m_Status == BoatStatus.Flying);
+			}
+			BoatAnim.SetBool (FlyActionHash, m_Status == BoatStatus.Flying);
+		}
+	}
+
+	public void FlyToDirection(Vector2 direction) {
+		Rigidbody2D.velocity = Vector2.zero;
+		Status = BoatStatus.Flying;
+		FlyingDirection = direction;
+		FlyingSrcPos = transform.position;
+
+		GetComponent<Collider2D> ().enabled = false;
+		FlyingSim = GameObject.Find ("FlySimulator").GetComponent<FlyingSimulator>();
+		FlyingSim.SimulateParabola (ParabolaSimulateForce);
 	}
 }

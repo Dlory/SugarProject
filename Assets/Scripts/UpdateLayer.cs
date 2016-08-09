@@ -5,24 +5,22 @@ public class UpdateLayer : MonoBehaviour {
 	GameObject player;
 	float playerY;
 	float myY;
+	SpriteRenderer myRender;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindWithTag ("Player");
+		myRender = transform.GetComponent<SpriteRenderer> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		playerY = player.transform.localPosition.y;
-		myY = transform.localPosition.y;
+		playerY = player.transform.position.y;
+		myY = transform.position.y;
 		if (myY < playerY) {
-			int myOrder = transform.GetComponent<SpriteRenderer> ().sortingOrder;
-			myOrder = 2;
-			transform.GetComponent<SpriteRenderer> ().sortingOrder = myOrder;
+			myRender.sortingOrder = 2;
 		} 
 		else {
-			int myOrder = transform.GetComponent<SpriteRenderer> ().sortingOrder;
-			myOrder = 0;
-			transform.GetComponent<SpriteRenderer> ().sortingOrder = myOrder;
+			myRender.sortingOrder = 0;
 		}
 	}
 }
