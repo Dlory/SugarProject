@@ -3,8 +3,9 @@ using System.Collections;
 
 public enum BoatStatus {
 	Idle = 0,
-	ReadyToFly = 1,
-	Flying = 2,
+	Move = 1,
+	ReadyToFly = 2,
+	Flying = 3,
 };
 
 public class BoatScript : MonoBehaviour {
@@ -13,7 +14,7 @@ public class BoatScript : MonoBehaviour {
 	public Vector3 ParabolaSimulateForce = new Vector3(3, 10, 0);
 	public GameObject ShadowSprite;
 
-	BoatStatus m_Status = BoatStatus.Idle;
+	BoatStatus AnimationStatus = BoatStatus.Idle;
 	Rigidbody2D Rigidbody2D;
 	Collider2D PlayerCollider2D;
 
@@ -38,10 +39,11 @@ public class BoatScript : MonoBehaviour {
 	}
 
 	void Update(){
-		UpdateStatusIfNeedly (Status);
-
-		// Anim.SetBool (FlyActionHash, Input.GetKey (KeyCode.Z));
-		// Anim.SetBool (ShakeActionHash, Input.GetKey (KeyCode.X));
+		if (Status != BoatStatus.Flying) {
+			bool isIdle = Mathf.Abs (Rigidbody2D.velocity.x) < 0.1f && Mathf.Abs (Rigidbody2D.velocity.y) < 0.1f;
+			Status = isIdle ? BoatStatus.Idle : BoatStatus.Move;
+		}
+		UpdateAnimationIfNeedly ();
 
 		if (Status == BoatStatus.Flying) {
 			if (Camera.main.orthographicSize <= 7.68f) {
@@ -104,22 +106,22 @@ public class BoatScript : MonoBehaviour {
 		Rigidbody2D.AddForce (impact, ForceMode2D.Impulse);
 	}
 
-	void UpdateStatusIfNeedly(BoatStatus status) {
-		if (m_Status != status) {
-			m_Status = status;
+	void UpdateAnimationIfNeedly() {
+		if (AnimationStatus != Status) {
+			AnimationStatus = Status;
 
 			Collider2D[] colliders = GetComponentsInChildren<Collider2D> ();
 			foreach (Collider2D c in colliders) {
-				c.enabled = m_Status != BoatStatus.Flying;
-				print ("enable " + m_Status);
+				c.enabled = Status != BoatStatus.Flying;
+				print ("Status  " + Status);
 			}
 
 			int FlyActionHash = Animator.StringToHash("Fly");
+			int MoveActionHash = Animator.StringToHash("Move");
 
-			if (ShadowAnim) {
-				ShadowAnim.SetBool (FlyActionHash, m_Status == BoatStatus.Flying);
-			}
-			BoatAnim.SetBool (FlyActionHash, m_Status == BoatStatus.Flying);
+			ShadowAnim.SetBool (FlyActionHash, Status == BoatStatus.Flying);
+			ShadowAnim.SetBool (MoveActionHash, Status == BoatStatus.Move);
+			BoatAnim.SetBool (FlyActionHash, Status == BoatStatus.Flying);
 		}
 	}
 

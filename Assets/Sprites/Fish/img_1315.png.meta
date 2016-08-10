@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: b927106b8ab66495d90557f8b8da05a4
-timeCreated: 1466048513
+timeCreated: 1470819656
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -41,15 +41,14 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.7}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  alignment: 0
+  spritePivot: {x: 0.52, y: 0.87}
+  spriteBorder: {x: 0, y: 1, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    serializedVersion: 2
     sprites: []
     outline: []
   spritePackingTag: Fish1

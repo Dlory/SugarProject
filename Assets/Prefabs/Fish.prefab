@@ -10,7 +10,9 @@ GameObject:
   - 4: {fileID: 481756}
   - 212: {fileID: 21223952}
   - 95: {fileID: 9541556}
-  m_Layer: 0
+  - 60: {fileID: 6000344}
+  - 114: {fileID: 11475264}
+  m_Layer: 13
   m_Name: fishLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,11 +28,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 457976}
   - 212: {fileID: 21274918}
-  - 114: {fileID: 11480366}
   - 50: {fileID: 5012132}
-  - 61: {fileID: 6153768}
   - 95: {fileID: 9596390}
   - 114: {fileID: 11468212}
+  - 60: {fileID: 6002180}
   m_Layer: 9
   m_Name: Fish
   m_TagString: Fish
@@ -45,7 +46,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 176202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40.15, y: -3.18, z: 0}
+  m_LocalPosition: {x: 39.25, y: 6.94, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -59,7 +60,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 131754}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03, y: -0.706, z: 0}
+  m_LocalPosition: {x: 0.05, y: -0.1, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -82,8 +83,37 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &6153768
-BoxCollider2D:
+--- !u!60 &6000344
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131754}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: -0.27402717, y: 0.7754209}
+      - {x: -0.2376286, y: 0.955447}
+      - {x: -0.11951374, y: 1.1393884}
+      - {x: 0.015537897, y: 1.1709219}
+      - {x: 0.152028, y: 1.1372194}
+      - {x: 0.21889986, y: 0.9577461}
+      - {x: 0.22839573, y: 0.7548644}
+      - {x: 0.14620832, y: 0.3128911}
+      - {x: 0.12794204, y: 0.10750698}
+      - {x: 0.22143163, y: -0.2914844}
+      - {x: 0.38199517, y: -0.6016435}
+      - {x: -0.023527553, y: -0.61527944}
+      - {x: -0.42611435, y: -0.6218417}
+      - {x: -0.25103226, y: -0.33128914}
+      - {x: -0.22194405, y: 0.30916482}
+--- !u!60 &6002180
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -93,9 +123,26 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 1
-  m_Offset: {x: -0.0000009536743, y: 0.4109571}
-  serializedVersion: 2
-  m_Size: {x: 0.74746835, y: 1.7470918}
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: -0.3623908, y: 2.089737}
+      - {x: 0.13013023, y: 2.1360092}
+      - {x: 0.6228747, y: 2.0478652}
+      - {x: 1.0548892, y: 1.6119856}
+      - {x: 1.2391227, y: 0.9972695}
+      - {x: 1.2915094, y: 0.18387522}
+      - {x: 1.0869926, y: -0.5814212}
+      - {x: 0.8455549, y: -1.1426225}
+      - {x: 0.5362211, y: -1.5537944}
+      - {x: 0.048086986, y: -1.6923523}
+      - {x: -0.46212333, y: -1.5634694}
+      - {x: -0.7374845, y: -1.3120952}
+      - {x: -0.9733037, y: -0.76365405}
+      - {x: -1.0893631, y: -0.07758822}
+      - {x: -1.1520222, y: 0.51422936}
+      - {x: -1.0315105, y: 1.3462087}
+      - {x: -0.69480896, y: 1.881558}
 --- !u!95 &9541556
 Animator:
   serializedVersion: 3
@@ -136,35 +183,23 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 176202}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81904eb3074d0406a9dc21b209a419f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxRadius: 0
-  MinRadius: 0
-  boat: {fileID: 0}
-  forceScale: 0
-  minForce: 0
-  maxForce: 0
-  TargetValue: 0
---- !u!114 &11480366
+--- !u!114 &11475264
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 176202}
+  m_GameObject: {fileID: 131754}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e55ebd5ed02ab470fabea6b2949792ce, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a937cf3db4103aa3f5a64dbbb0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxRadius: 2.5
-  MinRadius: 1.5
-  forceScale: 0.1
-  minForce: 0
-  maxForce: 10
-  TargetValue: 0.02
+  OutTime: 3
 --- !u!212 &21223952
 SpriteRenderer:
   m_ObjectHideFlags: 1

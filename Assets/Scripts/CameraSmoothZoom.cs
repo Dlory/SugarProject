@@ -11,6 +11,11 @@ public class CameraSmoothZoom : MonoBehaviour {
 	Camera TheCamera;
 
 	public void ZoomCameraOrthographicSize(float size, float delay, float duration) {
+		if (isZooming) {
+			print ("ZoomCameraOrthographicSize WHILE is Zooming!");
+			return;
+		}
+
 		TheCamera = GetComponent<Camera>() ?? Camera.main;
 		zoomDelay = delay;
 		zoomToSize = size;

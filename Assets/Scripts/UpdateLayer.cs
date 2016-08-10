@@ -3,20 +3,21 @@ using System.Collections;
 
 public class UpdateLayer : MonoBehaviour {
 	GameObject player;
-	float playerY;
-	float myY;
+	BoatScript boatScript;
 	SpriteRenderer myRender;
+
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindWithTag ("Player");
+		boatScript = player.GetComponent<BoatScript> ();
 		myRender = transform.GetComponent<SpriteRenderer> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		playerY = player.transform.position.y;
-		myY = transform.position.y;
-		if (myY < playerY) {
+		float playerY = player.transform.position.y;
+		float myY = transform.position.y;
+		if (myY < playerY && boatScript.Status != BoatStatus.Flying) {
 			myRender.sortingOrder = 2;
 		} 
 		else {
