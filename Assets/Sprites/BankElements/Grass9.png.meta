@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: f99a9181922fa42fc81657bcd504a14a
-timeCreated: 1470210026
+guid: c6b51e66450ba497b84c05330d47d193
+timeCreated: 1470882891
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -30,7 +30,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -49,10 +49,9 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    serializedVersion: 2
     sprites: []
     outline: []
-  spritePackingTag: BankEles
+  spritePackingTag: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

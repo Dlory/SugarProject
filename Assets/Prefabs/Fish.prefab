@@ -188,6 +188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81904eb3074d0406a9dc21b209a419f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxRadius: 2.5
+  MinRadius: 1.5
 --- !u!114 &11475264
 MonoBehaviour:
   m_ObjectHideFlags: 1

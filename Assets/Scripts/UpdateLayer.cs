@@ -5,7 +5,6 @@ public class UpdateLayer : MonoBehaviour {
 	GameObject player;
 	BoatScript boatScript;
 	SpriteRenderer myRender;
-
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindWithTag ("Player");
