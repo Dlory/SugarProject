@@ -78,6 +78,8 @@ public class NewFishScript : MonoBehaviour {
 	}
 
 	public void ChangeDirection(){
+        if (stopRotate)
+            return;
 		Vector3 nowRotation = transform.rotation.eulerAngles;
 		Vector3 randomAngle = new Vector3 (0, 0, nowRotation.z + Random.Range(-180,180));
 		//iTween.RotateTo (gameObject, iTween.Hash ("rotation", randomAngle, "time", Random.Range(0.7f,1.2f), "easeType", iTween.EaseType.linear, "oncomplete", "RandomRotate", "oncompletetarget", gameObject));
@@ -99,6 +101,7 @@ public class NewFishScript : MonoBehaviour {
 		}
 	}
 
+    private bool stopRotate = false;
 	public void RandomMoveInCircle(){             //鱼进入魔法圈后的随机运动的逻辑实现
 		CancelInvoke();
 		Debug.Log("test");
@@ -108,20 +111,20 @@ public class NewFishScript : MonoBehaviour {
 		animSpeed = 1;
 		Invoke ("Test", 0.5f);
 		Debug.Log (iTween.Count (gameObject));
+        stopRotate = true;
+        DOTween.Kill (gameObject);
 
-		DOTween.Kill (gameObject);
+        float angle = Random.Range(0, 2 * Mathf.PI);       //随机一个角度
+        float r = Random.Range(MinRadius, MaxRadius);       //随机一个半径
+        Vector3 nextTarget = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * r + player.transform.position;        //利用随机的角度与半径算出此随机点的位置
+        Debug.DrawLine(player.transform.position, nextTarget, Color.green, 1);
+        Vector3 horizontalDir = nextTarget - transform.position;
+        float rotateTowardsAngle = GetSignAngle(horizontalDir.normalized, transform.up.normalized);               //计算出随机点与船的连线，到鱼的y轴的夹角
+        transform.DORotate(new Vector3(0, 0, rotateTowardsAngle + transform.localEulerAngles.z), Mathf.Abs(rotateTowardsAngle) / 30).SetId(gameObject);      //利用动画让鱼从当前角度朝向随机点的方向转动
+        Invoke("RandomMoveInCircle", Random.Range(0.5f, 1.5f));               //随机时间后重新调用这个方法
+    }
 
-//		float angle = Random.Range (0, 2 * Mathf.PI);       //随机一个角度
-//		float r = Random.Range (MinRadius, MaxRadius);       //随机一个半径
-//		Vector3 nextTarget = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * r + player.transform.position;        //利用随机的角度与半径算出此随机点的位置
-//		Debug.DrawLine(player.transform.position,nextTarget,Color.green,1);
-//		Vector3 horizontalDir = nextTarget - transform.position;
-//		float rotateTowardsAngle = GetSignAngle (horizontalDir.normalized, transform.up.normalized);               //计算出随机点与船的连线，到鱼的y轴的夹角
-//		transform.DORotate(new Vector3(0, 0, rotateTowardsAngle + transform.localEulerAngles.z), Mathf.Abs(rotateTowardsAngle)/30).SetId (gameObject);      //利用动画让鱼从当前角度朝向随机点的方向转动
-//		Invoke("RandomMoveInCircle",Random.Range(0.5f,1.5f));               //随机时间后重新调用这个方法
-	}
-
-	private float GetSignAngle(Vector3 a,Vector3 b)        //计算从向量a到向量b的夹角的方法
+    private float GetSignAngle(Vector3 a,Vector3 b)        //计算从向量a到向量b的夹角的方法
 	{
 		return -Vector3.Angle (a, b) * Mathf.Sign (Vector3.Cross(a,b).z);
 
