@@ -10,7 +10,6 @@ public class WaterFlowScript : MonoBehaviour {
 	private PolygonCollider2D polygonCollider;
 	private SplineTrailRenderer trailReference;
 	private iTweenPath itwPath;
-	private Mesh mesh;
 
 	private float defaultTrailMaxLength;
 	private Vector3 defaultPosition;
@@ -23,7 +22,6 @@ public class WaterFlowScript : MonoBehaviour {
 		trailReference = GetComponentInChildren<SplineTrailRenderer> ();
 		defaultTrailMaxLength = trailReference.maxLength;
 		defaultPosition = trailReference.gameObject.transform.position;
-		mesh = trailReference.GetComponent<MeshFilter> ().mesh;
 		itwPath = GetComponent<iTweenPath> ();
 	}
 

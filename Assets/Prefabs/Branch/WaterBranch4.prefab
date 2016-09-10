@@ -26,7 +26,6 @@ GameObject:
   - 4: {fileID: 468170}
   - 212: {fileID: 21270598}
   - 60: {fileID: 6078210}
-  - 114: {fileID: 11453750}
   m_Layer: 10
   m_Name: WaterBranch4
   m_TagString: Stone
@@ -96,17 +95,6 @@ PolygonCollider2D:
       - {x: 0.06921387, y: -0.0660305}
       - {x: 0.14422989, y: 0.020863533}
       - {x: 0.06242752, y: 0.14252043}
---- !u!114 &11453750
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 194448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34001a9770d6d45a0b9053f557efcdfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &21270598
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -161,8 +149,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -571485757
-  m_SortingOrder: 0
+  m_SortingLayerID: 1798564311
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 2c8467e5c04654d06ae9176b01511d55, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

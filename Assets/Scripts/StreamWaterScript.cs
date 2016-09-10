@@ -22,7 +22,7 @@ public class StreamWaterScript : MonoBehaviour {
 	Animator Animator;
 
 	void Start () {
-		Boat = GameObject.FindGameObjectWithTag (Constant.TagPlayer);
+		Boat = GameObject.FindGameObjectWithTag ("Player");
 		BoatRigidbody = Boat.GetComponent<Rigidbody2D> ();
 		Collider2D = GetComponent<Collider2D> ();
 		Animator = GetComponent<Animator> ();
@@ -38,7 +38,7 @@ public class StreamWaterScript : MonoBehaviour {
 			m_Inverse = Inverse;
 		}
 
-		if (other.gameObject.tag == Constant.TagPlayer) {
+		if (other.gameObject.tag == "Player") {
 			BoxCollider2D[] colliders = GetComponentsInChildren<BoxCollider2D> ();
 			if (colliders != null) {
 				foreach (BoxCollider2D c in colliders) {
@@ -51,8 +51,8 @@ public class StreamWaterScript : MonoBehaviour {
 	}
 
 	Vector2 ForceAtCollider(BoxCollider2D collider) {
-		Vector3 rotation = collider.gameObject.transform.rotation.eulerAngles;
-		float rad = Mathf.Deg2Rad * rotation.z;
+		//Vector3 rotation = collider.gameObject.transform.rotation.eulerAngles;
+		//float rad = Mathf.Deg2Rad * rotation.z;
 
 		float angle = collider.gameObject.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
 		Vector2 target = Vector2.right;

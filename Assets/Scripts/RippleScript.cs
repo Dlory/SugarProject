@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class RippleScript : MonoBehaviour {
+	public static string RippleDestroyEvent = "RippleDestroyEvent";
 	public float Impact = 1f;
+	public bool isInterferenceRipple = false;
 
 	/// <summary>
 	/// 衰减程度 0-1, 0表示在末端力不衰减，1表示在末端力衰减为0
@@ -51,6 +53,8 @@ public class RippleScript : MonoBehaviour {
 	}
 
 	public void PlayOver() {
+		BroadcastSystem.defaultBoardcast.SendMessage (RippleDestroyEvent, this, null);
 		Destroy (gameObject);
 	}
+
 }

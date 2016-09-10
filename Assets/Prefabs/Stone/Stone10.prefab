@@ -10,8 +10,7 @@ GameObject:
   - 4: {fileID: 435958}
   - 212: {fileID: 21232948}
   - 60: {fileID: 6043120}
-  - 114: {fileID: 11416876}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Stone10
   m_TagString: Stone
   m_Icon: {fileID: 0}
@@ -27,7 +26,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 433544}
   - 212: {fileID: 21274946}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Stone10Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +68,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 109042}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4bf9bc60495fbf54bb6b9975aff8de09, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
@@ -93,17 +92,6 @@ PolygonCollider2D:
       - {x: -0.5773805, y: 0.16997707}
       - {x: -0.8311776, y: 0.15889221}
       - {x: -0.9066199, y: 0.18060273}
---- !u!114 &11416876
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 109042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34001a9770d6d45a0b9053f557efcdfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &21232948
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -158,8 +146,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -571485757
-  m_SortingOrder: 0
+  m_SortingLayerID: 1798564311
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 5f2f334ca7b7f4b598e59184fe0630aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

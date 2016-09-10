@@ -66,7 +66,7 @@ public class BroadcastSystem
 			eventTable.Remove(eventType);
 	}
 
-	public void SendMessage(string eventType, object from,params BroadCastParam[] args)
+	public void SendMessage(string eventType, object from, params BroadCastParam[] args)
 	{
 		Callback d;
 		if (eventTable.TryGetValue(eventType, out d))

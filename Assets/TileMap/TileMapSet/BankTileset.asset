@@ -336,8 +336,8 @@ MonoBehaviour:
       - {x: 0.2975, y: 0.7925}
       - {x: 0.5375, y: 0.7025}
       - {x: 0.8175, y: 0.6025}
-      - {x: 1, y: 0.5125}
-      - {x: 1, y: 0}
+      - {x: 1, y: 0.4975}
+      - {x: 1, y: -0}
       type: 2
     paramContainer:
       m_paramList: []

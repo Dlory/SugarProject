@@ -2,14 +2,13 @@
 using System.Collections;
 
 public class PlayerFollowScript : MonoBehaviour {
-	private Transform player;
+	public Transform followTarget;
 	private Camera mainCamera;
 	private Vector2 boundsSize;
 
 	// Use this for initialization
 	void Start () {
 		mainCamera = Camera.main;
-		player = GameObject.FindGameObjectWithTag(Constant.TagPlayer).transform;
 
 		float orthographicSize = mainCamera.orthographicSize;
 		float aspectRatio = Screen.width / Screen.height;
@@ -21,7 +20,11 @@ public class PlayerFollowScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void LateUpdate () {
-		if (boundsSize == null || boundsSize == Vector2.zero) {
+		if (!followTarget)
+			return;
+
+		Transform player = this.followTarget;
+		if (boundsSize == Vector2.zero) {
 			float x = player.position.x;
 			float y = player.position.y;
 			mainCamera.transform.position = new Vector3 (x, y, mainCamera.transform.position.z);

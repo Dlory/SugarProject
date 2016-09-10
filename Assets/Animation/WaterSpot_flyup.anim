@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!74 &7400000
+AnimationClip:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: WaterSpot_flyup
+  serializedVersion: 6
+  m_Legacy: 0
+  m_Compressed: 0
+  m_UseHighQualityCurve: 1
+  m_RotationCurves: []
+  m_CompressedRotationCurves: []
+  m_EulerCurves: []
+  m_PositionCurves: []
+  m_ScaleCurves: []
+  m_FloatCurves: []
+  m_PPtrCurves:
+  - curve:
+    - time: 0
+      value: {fileID: 21300000, guid: 0c10f86874eeef745be132f7c5ad4f8d, type: 3}
+    - time: 0.083333336
+      value: {fileID: 21300000, guid: 200194cf466ba5f469ccb38dca10262a, type: 3}
+    - time: 0.16666667
+      value: {fileID: 21300000, guid: f089747e06db1954cad22340a05d7b4c, type: 3}
+    - time: 0.25
+      value: {fileID: 21300000, guid: 7cc81b50f1136eb42ac6ccdeb3147190, type: 3}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: 76bf1d6d72e4b294f8260c40a0b75171, type: 3}
+    - time: 0.41666666
+      value: {fileID: 21300000, guid: f56a90789298242409b98015ea0482c3, type: 3}
+    - time: 0.5
+      value: {fileID: 21300000, guid: 62b1fccf4be3b9e4185187ad3516f181, type: 3}
+    - time: 0.5833333
+      value: {fileID: 21300000, guid: 5e0573d96aa5cd048a6e34bd485b0590, type: 3}
+    - time: 0.6666667
+      value: {fileID: 0}
+    attribute: m_Sprite
+    path: 
+    classID: 212
+    script: {fileID: 0}
+  m_SampleRate: 12
+  m_WrapMode: 0
+  m_Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_ClipBindingConstant:
+    genericBindings:
+    - path: 0
+      attribute: 0
+      script: {fileID: 0}
+      classID: 212
+      customType: 23
+      isPPtrCurve: 1
+    pptrCurveMapping:
+    - {fileID: 21300000, guid: 0c10f86874eeef745be132f7c5ad4f8d, type: 3}
+    - {fileID: 21300000, guid: 200194cf466ba5f469ccb38dca10262a, type: 3}
+    - {fileID: 21300000, guid: f089747e06db1954cad22340a05d7b4c, type: 3}
+    - {fileID: 21300000, guid: 7cc81b50f1136eb42ac6ccdeb3147190, type: 3}
+    - {fileID: 21300000, guid: 76bf1d6d72e4b294f8260c40a0b75171, type: 3}
+    - {fileID: 21300000, guid: f56a90789298242409b98015ea0482c3, type: 3}
+    - {fileID: 21300000, guid: 62b1fccf4be3b9e4185187ad3516f181, type: 3}
+    - {fileID: 21300000, guid: 5e0573d96aa5cd048a6e34bd485b0590, type: 3}
+    - {fileID: 0}
+  m_AnimationClipSettings:
+    serializedVersion: 2
+    m_AdditiveReferencePoseClip: {fileID: 0}
+    m_AdditiveReferencePoseTime: 0
+    m_StartTime: 0
+    m_StopTime: 0.75
+    m_OrientationOffsetY: 0
+    m_Level: 0
+    m_CycleOffset: 0
+    m_HasAdditiveReferencePose: 0
+    m_LoopTime: 0
+    m_LoopBlend: 0
+    m_LoopBlendOrientation: 0
+    m_LoopBlendPositionY: 0
+    m_LoopBlendPositionXZ: 0
+    m_KeepOriginalOrientation: 0
+    m_KeepOriginalPositionY: 1
+    m_KeepOriginalPositionXZ: 0
+    m_HeightFromFeet: 0
+    m_Mirror: 0
+  m_EditorCurves: []
+  m_EulerEditorCurves: []
+  m_HasGenericRootTransform: 0
+  m_HasMotionFloatCurves: 0
+  m_GenerateMotionCurves: 0
+  m_Events:
+  - time: 0.6666667
+    functionName: PlayOver
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

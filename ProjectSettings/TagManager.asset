@@ -8,9 +8,11 @@ TagManager:
   - Ripple
   - Fragment
   - MagicCircle
-  - Obstruction
   - Stone
   - Fish
+  - Bubble
+  - Hamster
+  - MagicArea
   layers:
   - Default
   - TransparentFX
@@ -20,12 +22,9 @@ TagManager:
   - UI
   - 
   - 
-  - MagicCircle
-  - Fish
   - Stone
   - Bank
   - Player
-  - FishLight
   - 
   - 
   - 
@@ -44,6 +43,9 @@ TagManager:
   - 
   - 
   - 
+  - 
+  - 
+  - WaterTap
   m_SortingLayers:
   - name: UnderWater
     uniqueID: 2623865253
@@ -54,15 +56,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Shadow
-    uniqueID: 3723481539
-    locked: 0
   - name: OverWater
     uniqueID: 1609977349
     locked: 0
   - name: Player
     uniqueID: 3097349015
     locked: 0
-  - name: Elements
-    uniqueID: 3619669441
+  - name: OverAll
+    uniqueID: 50885897
     locked: 0

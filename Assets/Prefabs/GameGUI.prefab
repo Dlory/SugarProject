@@ -10,12 +10,12 @@ GameObject:
   - 4: {fileID: 407018}
   - 114: {fileID: 11453504}
   - 114: {fileID: 11487158}
+  - 114: {fileID: 11482072}
   - 114: {fileID: 11408178}
   - 114: {fileID: 11475930}
-  - 114: {fileID: 11495614}
-  - 114: {fileID: 11433012}
-  - 114: {fileID: 11427932}
-  - 114: {fileID: 11479596}
+  - 114: {fileID: 11456128}
+  - 114: {fileID: 11486574}
+  - 114: {fileID: 11497748}
   m_Layer: 5
   m_Name: GameGUI
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 109302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.3997803, y: 3.3603516, z: 3.8625488}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -48,47 +48,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ripple: {fileID: 158500, guid: cdde08d0a34f9d4419f67daeebe4f1ab, type: 2}
-  Impact: 5
+  Impact: 4
   SpawnMinInterval: 0.5
   SpawnMinDistanceX: 2
   SpawnMinDistanceY: 1
---- !u!114 &11427932
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 109302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06c71470e58dece45a990c1eaafbd474, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FingerIndexFilter: -1
-  Raycaster: {fileID: 0}
-  UseSendMessage: 1
-  SendMessageToSelection: 1
-  MessageTarget: {fileID: 0}
-  MessageName: OnFingerDown
---- !u!114 &11433012
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 109302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3aeaa6af5a2574dbc0c14ed591b5b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FingerIndexFilter: -1
-  Raycaster: {fileID: 0}
-  UseSendMessage: 1
-  SendMessageToSelection: 1
-  MessageTarget: {fileID: 0}
-  MoveMessageName: OnFingerMove
-  StationaryMessageName: OnFingerStationary
-  TrackMove: 1
-  TrackStationary: 1
+  EnergyPerRippleCost: 5
+  ParabolaSimulateForce: {x: 3, y: 5}
+  dialogueTalkMode: 0
 --- !u!114 &11453504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,6 +76,28 @@ MonoBehaviour:
   allowDrag: 0
   frequency: 0.5
   nbDecimal: 1
+--- !u!114 &11456128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fc98219a83dff145947365dc914d06e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TapThreshold: 0.5
+  SwipeThreshold: 50
+  HeldThreshold: 1
+  ReferenceDpi: 200
+  RecordFingers: 1
+  RecordThreshold: 5
+  RecordLimit: 10
+  SimulateMultiFingers: 0
+  PinchTwistKey: 306
+  MultiDragKey: 308
+  FingerTexture: {fileID: 2800000, guid: 25c48be3a87ea0f489a6d41c9c9a2194, type: 3}
 --- !u!114 &11475930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,7 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884f615ea55954a9589624116dce703c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11479596
+  followTarget: {fileID: 0}
+--- !u!114 &11482072
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -129,15 +118,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 109302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49ed014673f07847be2bb1995e31a70, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e785ab370e5ecd48991bf4b74ab3c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  makePersistent: 1
-  detectUnityRemote: 1
-  mouseInputProviderPrefab: {fileID: 11400000, guid: 2fc6e1e218b70c94285691a647d862aa,
-    type: 2}
-  touchInputProviderPrefab: {fileID: 11400000, guid: 7e371fba69d7cea42a0d86fb48257c47,
-    type: 2}
+  Energy: 0
+  MaxEnergy: 100
+  EnergyRecoverDelay: 1
+  EnergyRecoverPerSecond: 30
+--- !u!114 &11486574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57221dfe26068f44b8ebf265e4768bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11487158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,7 +149,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollectCount: 0
   TotalCount: 999
---- !u!114 &11495614
+  EnergyBarTexture: {fileID: 2800000, guid: 5f1c9444c6e5b8641b220e143bf393c3, type: 3}
+  EnergyBarBGTexture: {fileID: 2800000, guid: 2f3e4af831b3a584196c612c3225d697, type: 3}
+  EnergyBarRect:
+    serializedVersion: 2
+    x: 20
+    y: 20
+    width: 200
+    height: 30
+  scorePerPower: 100
+  score: 0
+--- !u!114 &11497748
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -159,15 +167,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 109302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a4762978c2447048aacc02a04592aaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 147378ea5895a674b8360bb78735bd67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FingerIndexFilter: -1
-  Raycaster: {fileID: 0}
-  UseSendMessage: 1
-  SendMessageToSelection: 1
-  MessageTarget: {fileID: 0}
-  MessageName: OnFingerUp
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

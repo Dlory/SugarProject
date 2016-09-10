@@ -25,12 +25,17 @@ public class FlyingSimulator : MonoBehaviour {
 	/// </summary>
 	/// <param name="position">Position.</param>
 	/// <param name="force">Force.</param>
-	public void SimulateParabola(Vector3 force) {
+	public void SimulateParabola(Vector2 ParabolaSimulateForce) {
+		Vector3 force = new Vector3(ParabolaSimulateForce.x, ParabolaSimulateForce.y, 0);
 		flying = true;
 
 		gameObject.transform.position = Vector2.zero;
 		RB.velocity = Vector3.zero;
 		RB.useGravity = true;
 		RB.AddForce (force, ForceMode.Impulse);
+	}
+
+	public float TopmostHeightForParabola(float forceY) {
+		return 11f / 10f * forceY;
 	}
 }
