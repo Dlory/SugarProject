@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 495592}
   - 212: {fileID: 21284502}
+  - 60: {fileID: 6031856}
   m_Layer: 0
   m_Name: LotusLeaf4
   m_TagString: Untagged
@@ -52,13 +53,56 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 175196}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -120.24, y: -42.39, z: 0}
+  m_LocalPosition: {x: -139.58, y: -38.72, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 473776}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!60 &6031856
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175196}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: -1.6794586, y: 0.25829315}
+      - {x: -2.2526093, y: 0.4569893}
+      - {x: -2.2942047, y: 1.1175499}
+      - {x: -2.0521545, y: 1.2352142}
+      - {x: -1.5201111, y: 1.3666763}
+      - {x: -0.93930054, y: 1.3461113}
+      - {x: -0.5176239, y: 1.1538887}
+      - {x: -0.27127075, y: 0.93735886}
+      - {x: -0.3869171, y: 0.39484406}
+      - {x: 0.26690674, y: 0.28577042}
+      - {x: 0.3183136, y: 0.15494919}
+      - {x: 0.75367737, y: 0.30973434}
+      - {x: 1.1161652, y: 0.45817184}
+      - {x: 1.6381073, y: 0.5162735}
+      - {x: 2.1401978, y: 0.43492508}
+      - {x: 2.3608246, y: 0.24253464}
+      - {x: 2.268402, y: 0.119716644}
+      - {x: 1.8627014, y: -0.00032806396}
+      - {x: 1.3971558, y: -0.019550323}
+      - {x: 0.77967834, y: 0.15069962}
+      - {x: 0.28744507, y: -0.084789276}
+      - {x: 1.078476, y: -0.38119888}
+      - {x: 1.0494537, y: -0.7530556}
+      - {x: 0.2854004, y: -0.9752083}
+      - {x: -0.5737915, y: -0.8929558}
+      - {x: -1.4736023, y: -0.5726776}
+      - {x: -1.9324036, y: -0.42313004}
+      - {x: -1.86203, y: -0.02991867}
+      - {x: -1.6785278, y: 0.0012359619}
 --- !u!212 &21212022
 SpriteRenderer:
   m_ObjectHideFlags: 1
