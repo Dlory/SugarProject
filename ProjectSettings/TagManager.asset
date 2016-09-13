@@ -8,9 +8,8 @@ TagManager:
   - Ripple
   - Fragment
   - MagicCircle
-  - Stone
+  - AutoFixFrontBack
   - Fish
-  - Bubble
   - Hamster
   - MagicArea
   layers:
@@ -22,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - Stone
+  - Barrier
   - Bank
   - Player
   - 

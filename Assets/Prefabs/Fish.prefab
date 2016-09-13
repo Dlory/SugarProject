@@ -11,7 +11,7 @@ GameObject:
   - 212: {fileID: 21263940}
   - 95: {fileID: 9582660}
   - 114: {fileID: 11491516}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ GameObject:
   - 212: {fileID: 21216770}
   - 95: {fileID: 9561334}
   - 50: {fileID: 5037830}
-  - 60: {fileID: 6014116}
+  - 58: {fileID: 5804554}
   - 114: {fileID: 11480684}
   m_Layer: 0
   m_Name: Fish
@@ -44,10 +44,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 186918}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071067}
+  m_LocalPosition: {x: 66.24, y: 61.1, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_Children:
   - {fileID: 465664}
   m_Father: {fileID: 0}
@@ -82,8 +82,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &6014116
-PolygonCollider2D:
+--- !u!58 &5804554
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -93,14 +93,9 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: -1}
-  m_Points:
-    m_Paths:
-    - - {x: 0.115934715, y: 1.3565038}
-      - {x: 0.59310913, y: 0.981472}
-      - {x: 0.14552803, y: 0.62386507}
-      - {x: -1.9981575, y: 0.92685616}
-      - {x: -1.9688996, y: 1.1983603}
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!95 &9561334
 Animator:
   serializedVersion: 3
@@ -146,11 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd5ecfde63ee3af4cb98d9a97c8541cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fastestSpeed: 3
+  fastestSpeed: 4
   fishSeekTurnDegree: 100
   rippleEffectInterval: 5
   randomMoveAboutRadius: 20
-  exitMagicCircleFreeSecond: 5
+  exitMagicCircleFreeSecond: 10
   interferenceRippleLastsSecond: 5
   fishAnimator: {fileID: 9561334}
   fishLightAnimator: {fileID: 9582660}
@@ -166,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OutTime: 1
+  fishSr: {fileID: 21216770}
 --- !u!212 &21216770
 SpriteRenderer:
   m_ObjectHideFlags: 1

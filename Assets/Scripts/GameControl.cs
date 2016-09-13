@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 public class GameControl : MonoBehaviour {
 	public GameObject Ripple;
-	public float Impact = 3f;
-	public float SpawnMinInterval = 0.5f;
-	public float SpawnMinDistanceX = 2f;
-	public float SpawnMinDistanceY = 1f;
-	public float EnergyPerRippleCost = 5;
+	[Range(0,1)]
+	public float minRippleScale = 0.35f;
+	public float maxImpact = 6f;
+	public float accumulateTime = 1f; //蓄到最大力的时间
+	public float spawnPathPointBetween = 1f;
+	public int flowLastRippleCount = 8; 
+	public GameObject controlTrail;
 
 	[HideInInspector]
 	public bool dialogueTalkMode = false;
-
-	BoatEnergy boatEnergy;
 	BoatScript boat;
 	Camera mainCamera;
 
@@ -23,9 +23,10 @@ public class GameControl : MonoBehaviour {
 
 	int detectLayer;
 	Collider2D detectCollider;
+	GameObject liveControlTrail;
 
-	float lastSpawnTime;
-	Vector2 prevPoint;
+	float touchDownSinceTime;
+	List<Vector2> points = new List<Vector2>();
 
 	protected virtual void OnEnable()
 	{
@@ -51,22 +52,27 @@ public class GameControl : MonoBehaviour {
 		layerPlayer = LayerMask.NameToLayer ("Player");
 		layerWater = LayerMask.NameToLayer ("WaterTap");
 		layerBank = LayerMask.NameToLayer ("Bank");
-
 		boat = GameObject.FindGameObjectWithTag ("Player").GetComponent<BoatScript> ();
-		boatEnergy = GetComponent<BoatEnergy> ();
 	}
 
-	void SplashRipple(Vector2 hitPoint) {
+	RippleScript SplashRipple(Vector2 hitPoint, float impact, float splashRotate) {
 		if (Ripple != null) {
 			GameObject gameObj = Instantiate (Ripple, hitPoint, transform.rotation) as GameObject;
 			RippleScript ripple = gameObj.GetComponent<RippleScript>();
-			ripple.Impact = Impact;
+			ripple.Impact = impact;
+			ripple.RippleScale = impact * 1.3f / maxImpact;
 
-			if (prevPoint != Vector2.zero && (Mathf.Abs(prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs(prevPoint.y - hitPoint.y) > SpawnMinDistanceY)) {
-				float angle = AngleBetweenVector2 (prevPoint, hitPoint);
-				ripple.SplashRotated (Mathf.Deg2Rad * angle);
+			if (splashRotate != float.MaxValue) {
+				ripple.SplashRotated (Mathf.Deg2Rad * splashRotate);
 			}
+			return ripple;
+
+//			if (prevPoint != Vector2.zero && (Mathf.Abs(prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs(prevPoint.y - hitPoint.y) > SpawnMinDistanceY)) {
+//				float angle = AngleBetweenVector2 (prevPoint, hitPoint);
+//				ripple.SplashRotated (Mathf.Deg2Rad * angle);
+//			}
 		}
+		return null;
 	}
 
 	float AngleBetweenVector2(Vector2 vec1, Vector2 vec2) {
@@ -78,31 +84,20 @@ public class GameControl : MonoBehaviour {
 	void ResetVariables(){
 		detectLayer = -1;
 		detectCollider = null;
-		prevPoint = Vector2.zero;
+		points.Clear();
 	}
 
-	void TrySplashWater (Vector2 position) {
-		if (detectLayer == layerWater) { //滑动水面
-			Vector2 pos = mainCamera.ScreenToWorldPoint (position);
-			RaycastHit2D hitWater = Physics2D.Raycast (pos, Vector2.zero, Mathf.Infinity, 1 << layerWater);
-			RaycastHit2D hitBank = Physics2D.Raycast (pos, Vector2.zero, Mathf.Infinity, 1 << layerBank);
+	void SplashWater (Vector2 worldPosition, float impact, float splashRotate) {
+		if (detectLayer != layerWater) return;
 
-			if (hitWater.collider != null && hitBank.collider == null) {
-				Vector2 hitPoint = hitWater.point;
-				if (prevPoint != Vector2.zero && (Mathf.Abs (prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs (prevPoint.y - hitPoint.y) > SpawnMinDistanceY)) {
-					if (boatEnergy.CastEnergy (EnergyPerRippleCost)) {
-						SplashRipple (hitPoint);
-						lastSpawnTime = Time.timeSinceLevelLoad;
-						prevPoint = hitPoint;
-					}
-				} else if (Time.timeSinceLevelLoad - lastSpawnTime > SpawnMinInterval) {
-					if (boatEnergy.CastEnergy (EnergyPerRippleCost * 0.5f)) {
-						SplashRipple (hitPoint);
-						lastSpawnTime = Time.timeSinceLevelLoad;
-						prevPoint = hitPoint;
-					}
-				}
-			}
+		//滑动水面
+		Vector2 pos = worldPosition;
+		RaycastHit2D hitWater = Physics2D.Raycast (pos, Vector2.zero, Mathf.Infinity, 1 << layerWater);
+		RaycastHit2D hitBank = Physics2D.Raycast (pos, Vector2.zero, Mathf.Infinity, 1 << layerBank);
+
+		if (hitWater.collider != null && hitBank.collider == null) {
+			Vector2 hitPoint = hitWater.point;
+			SplashRipple (hitPoint, impact, splashRotate);
 		}
 	}
 
@@ -112,7 +107,6 @@ public class GameControl : MonoBehaviour {
 			BroadcastSystem.defaultBoardcast.SendMessage (NPCDialogue.NPCDialugeNextEvent, null, null);
 			return;
 		}
-
 		ResetVariables ();
 
 		bool detectNPC = false;
@@ -138,13 +132,20 @@ public class GameControl : MonoBehaviour {
 				break;
 			}
 		}
-		prevPoint = pos;
+		points.Add (finger.ScreenPosition);
+		touchDownSinceTime = Time.timeSinceLevelLoad;
 
 		if (detectNPC) {
 			NPCScript npc = detectCollider.gameObject.GetComponent<NPCScript> ();
 			if (npc != null) {
 				npc.TalkTo (); // 跟NPC对话
 			}
+		} else {
+			if (liveControlTrail != null) Destroy (liveControlTrail);
+			liveControlTrail = SpawnControlTrail ();
+
+			liveControlTrail.transform.position = ConvertControlTrailPosition(finger.ScreenPosition);
+			liveControlTrail.SetActive(true);
 		}
 	}
 
@@ -154,29 +155,91 @@ public class GameControl : MonoBehaviour {
 		}
 
 		Vector2 hitPoint = mainCamera.ScreenToWorldPoint (finger.ScreenPosition);
-		if (detectLayer == layerPlayer && (boat.Status == BoatStatus.Normal) && Vector2.Distance (prevPoint, hitPoint) < 0.5f) {
+		if (detectLayer == layerPlayer && (boat.Status == BoatStatus.Normal) && Vector2.Distance (points[points.Count - 1], hitPoint) < 0.5f) {
 			boat.AnnoyingAnimation ();
-		}
+		} else if (detectLayer == layerWater) {
+			float impact = (Time.timeSinceLevelLoad - touchDownSinceTime) * 1f/accumulateTime * maxImpact;
+			impact = Mathf.Clamp (impact, minRippleScale * maxImpact, maxImpact);
 
+			Vector2 lastPoint = points [points.Count - 1];
+			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (hitPoint)) > spawnPathPointBetween) {
+				points.Add (finger.ScreenPosition);
+			}
+
+			if (points.Count > flowLastRippleCount) {
+				points.RemoveRange (0, points.Count - flowLastRippleCount);
+			}
+//			points.RemoveRange (0, points.Count - 1);
+
+			for (int i = 0; i < points.Count; i++) {
+				Vector2 p = points [i];
+				float rotate = float.MaxValue;
+				if (i > 0) {
+					rotate = AngleBetweenVector2 (points [i - 1], p);
+				}
+				float scale = (float)(i) / points.Count * 0.5f + 0.5f;
+				SplashWater (mainCamera.ScreenToWorldPoint(p), impact * 1, rotate);
+			}
+			FadeInControlTrail ();
+		}
 		ResetVariables ();
 	}
 
 	public void OnFingerDrag(Lean.LeanFinger finger) {
 		if (dialogueTalkMode) return;
 
+		Vector2 lastPoint = points [points.Count - 1];
+		Vector2 point = finger.ScreenPosition;
 		if (detectLayer == layerPlayer && boat.Status != BoatStatus.Flying) {
-			Vector2 hitPoint = mainCamera.ScreenToWorldPoint (finger.ScreenPosition);
-			if (Vector2.Distance (prevPoint, hitPoint) > 2f && boat.flyable) {
-				boat.FlyToDirection (hitPoint - prevPoint);
+			if (Vector2.Distance (points[0], point) > 2f && boat.flyable) {
+				boat.FlyToDirection (point - points[0]);
 			}
-		} else {
-			TrySplashWater (finger.ScreenPosition);
+		} else if (detectLayer == layerWater) {
+			// 滑动水面
+			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (point)) > spawnPathPointBetween) {
+				points.Add (point);
+			}
+			liveControlTrail.transform.position = ConvertControlTrailPosition(finger.ScreenPosition);
 		}
 	}
 
 	public void OnFingerSet(Lean.LeanFinger finger) {
 		if (dialogueTalkMode) return;
 
-		TrySplashWater (finger.ScreenPosition);
+		if (detectLayer == layerWater) {
+			Vector2 lastPoint = points [points.Count - 1];
+			Vector2 point = finger.ScreenPosition;
+			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (point)) > spawnPathPointBetween) {
+				points.Add (point);
+			}
+			liveControlTrail.transform.position = ConvertControlTrailPosition(finger.ScreenPosition);
+		}
+	}
+
+	Vector3 ConvertControlTrailPosition(Vector2 pos) {
+		Vector3 trailPos = mainCamera.ScreenToWorldPoint (pos);
+		trailPos.z = liveControlTrail.transform.position.z;
+		return trailPos;
+	}
+
+	private GameObject SpawnControlTrail() {
+		if (controlTrail == null) return null;
+
+		GameObject particles = (GameObject)Instantiate(controlTrail);
+		particles.transform.position = new Vector3(0,particles.transform.position.y,0);
+
+		ParticleSystem ps = particles.GetComponent<ParticleSystem>();
+		if(ps != null)
+		{
+			ps.gameObject.AddComponent<CFX_AutoDestructShuriken>();
+		}
+		return particles;
+	}
+
+	private void FadeInControlTrail() {
+		if (liveControlTrail == null) return;
+		
+		ParticleSystem ps = liveControlTrail.GetComponent<ParticleSystem>();
+		ps.Stop ();
 	}
 }

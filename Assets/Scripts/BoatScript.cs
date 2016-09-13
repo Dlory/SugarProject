@@ -32,7 +32,11 @@ public class BoatScript : MonoBehaviour {
 			} else if (magicCircle.collectFish >= 3) {
 				return true;
 			} else if (touchingMagicArea != null){
-				return touchingMagicArea.flyIntoTouched;
+				MagicAreaScript ma = touchingMagicArea.GetComponent<MagicAreaScript> ();
+				if (ma != null) {
+					return ma.flyIntoTouched;
+				}
+				return false;
 			}
 			return false;
 		}
@@ -45,7 +49,7 @@ public class BoatScript : MonoBehaviour {
 	Rigidbody2D Rigidbody2D;
 	FlyingSimulator FlyingSim;
 	MagicCircle magicCircle;
-	MagicAreaScript touchingMagicArea;
+	Collider2D touchingMagicArea;
 
 	BoatStatus m_AnimationStatus = BoatStatus.Normal;
 	float m_ParabolaAnimationSpeed = 0f;
@@ -197,14 +201,13 @@ public class BoatScript : MonoBehaviour {
 				}
 			}
 			if (magicArea != null) {
-				touchingMagicArea = magicArea;
+				touchingMagicArea = other;
 			}
 		}
 	}
 
 	void OnTriggerExit2D(Collider2D other) {
-		MagicAreaScript magicArea = other.GetComponent<MagicAreaScript>();
-		if (magicArea != null) {
+		if (touchingMagicArea == other) {
 			touchingMagicArea = null;
 		}
 	}

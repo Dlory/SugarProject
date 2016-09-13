@@ -26,9 +26,9 @@ GameObject:
   - 4: {fileID: 483532}
   - 212: {fileID: 21270556}
   - 60: {fileID: 6098174}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: WitheredTree
-  m_TagString: Stone
+  m_TagString: AutoFixFrontBack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

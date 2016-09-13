@@ -48,12 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ripple: {fileID: 158500, guid: cdde08d0a34f9d4419f67daeebe4f1ab, type: 2}
-  Impact: 4
-  SpawnMinInterval: 0.5
-  SpawnMinDistanceX: 2
-  SpawnMinDistanceY: 1
-  EnergyPerRippleCost: 5
-  ParabolaSimulateForce: {x: 3, y: 5}
+  minRippleScale: 0.35
+  maxImpact: 6
+  accumulateTime: 1
+  spawnPathPointBetween: 1
+  flowLastRippleCount: 8
+  controlTrail: {fileID: 166858, guid: ca697ce1e73704545a1baa3acf92caa0, type: 2}
   dialogueTalkMode: 0
 --- !u!114 &11453504
 MonoBehaviour:
@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147378ea5895a674b8360bb78735bd67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isZoomingIn: 0
+  isZoomingOut: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

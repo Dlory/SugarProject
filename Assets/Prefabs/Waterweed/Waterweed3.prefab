@@ -26,9 +26,9 @@ GameObject:
   - 4: {fileID: 442978}
   - 212: {fileID: 21252704}
   - 61: {fileID: 6127436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Waterweed3
-  m_TagString: Untagged
+  m_TagString: AutoFixFrontBack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

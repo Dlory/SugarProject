@@ -31,7 +31,7 @@ public class MagicCircle : MonoBehaviour {
 
 	void Start() {
 		SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
-		m_sprtieSize = renderer.sprite.textureRect.width / renderer.sprite.pixelsPerUnit;
+		m_sprtieSize = Mathf.Max(renderer.sprite.textureRect.width, renderer.sprite.textureRect.height) / renderer.sprite.pixelsPerUnit;
 		this.scale = scale;
 	}
 

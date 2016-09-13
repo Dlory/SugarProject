@@ -12,7 +12,7 @@ GameObject:
   - 60: {fileID: 6079072}
   m_Layer: 8
   m_Name: Stone4
-  m_TagString: Stone
+  m_TagString: AutoFixFrontBack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

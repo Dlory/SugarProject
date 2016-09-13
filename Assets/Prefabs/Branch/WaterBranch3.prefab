@@ -10,9 +10,9 @@ GameObject:
   - 4: {fileID: 496190}
   - 212: {fileID: 21205476}
   - 68: {fileID: 6878966}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: WaterBranch3
-  m_TagString: Stone
+  m_TagString: AutoFixFrontBack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

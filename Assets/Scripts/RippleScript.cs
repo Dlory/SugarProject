@@ -3,7 +3,9 @@ using System.Collections;
 
 public class RippleScript : MonoBehaviour {
 	public static string RippleDestroyEvent = "RippleDestroyEvent";
+	[HideInInspector]
 	public float Impact = 1f;
+	[HideInInspector]
 	public bool isInterferenceRipple = false;
 
 	/// <summary>

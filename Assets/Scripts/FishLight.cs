@@ -3,11 +3,12 @@ using System.Collections;
 using DG.Tweening;
 public class FishLight : MonoBehaviour {
 	public float OutTime = 1f;
+	public SpriteRenderer fishSr;
 	SpriteRenderer sr;
 
 	// Use this for initialization
 	void Start () {
-		sr = transform.GetComponent<SpriteRenderer> ();
+		sr = GetComponent<SpriteRenderer> ();
 		sr.color = new Color32 (255, 255, 255, 0);
 	}
 
@@ -22,9 +23,11 @@ public class FishLight : MonoBehaviour {
 
 	public void FadeIn() {
 		UpdateLight (new Color32 (255, 248, 0, 255));
+		fishSr.color = Color.green;
 	}
 
 	public void FadeOut() {
 		UpdateLight (new Color32 (255, 255, 255, 0));
+		fishSr.color = Color.white;
 	}
 }
