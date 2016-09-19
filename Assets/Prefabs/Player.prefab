@@ -79,7 +79,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180228}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 55.7, y: 57.43, z: 0}
+  m_LocalPosition: {x: 55.7, y: 59.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -136,8 +136,8 @@ Rigidbody2D:
   m_GameObject: {fileID: 180228}
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.3
-  m_AngularDrag: 0.05
+  m_LinearDrag: 0.55
+  m_AngularDrag: 0.76
   m_GravityScale: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -270,6 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c4a9111f2f6f841aa97d13ed966a4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotation: 0
+  rotationMultiplier: 1
 --- !u!114 &11459656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -282,7 +284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Status: 0
-  ParabolaAnimationSpeed: 1
+  ParabolaAnimationSpeed: 0.98
   ParabolaSimulateForce: {x: 3, y: 6}
   HamsterSprite: {fileID: 118398}
   ShadowSprite: {fileID: 131218}
@@ -291,10 +293,10 @@ MonoBehaviour:
     type: 2}
   HamsterSnoreMinInterval: 10
   HamsterSnoreMaxInterval: 20
-  flayingAltitude: 0
   LandCollider: {fileID: 0}
   flyingDirection: {x: 0, y: 0}
   flyingSrcPos: {x: 0, y: 0, z: 0}
+  flyingAltitude: 0
 --- !u!114 &11469048
 MonoBehaviour:
   m_ObjectHideFlags: 1

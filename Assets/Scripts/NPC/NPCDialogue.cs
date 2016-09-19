@@ -16,7 +16,7 @@ public class NPCDialogue : MonoBehaviour {
 	bool isDialoguing = false;
 	int dialogueIndex = -1;
 
-	public void TalkDialogues() {
+	public void TalkDialogues() {		
 		if (dialogues.Count > 0) {
 			if (dialogueIndex < 0) {
 				gameControl.dialogueTalkMode = true;

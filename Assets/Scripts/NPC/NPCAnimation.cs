@@ -14,6 +14,7 @@ public class NPCAnimation : Object
 	private int mIndex = 0;
 	private bool mActive = false;
 	private List<Sprite> mSprites = new List<Sprite>();
+	private float lastTime;
 
 	public void Update () {
 		if (!enabled && mActive) {
@@ -21,7 +22,10 @@ public class NPCAnimation : Object
 		}
 		if (mActive && mSprites.Count > 1 && Application.isPlaying && fps > 0f)
 		{
-			mDelta += Time.deltaTime;
+			float deltaTime = Time.realtimeSinceStartup - lastTime;
+			lastTime = Time.realtimeSinceStartup;
+
+			mDelta += deltaTime;
 			float rate = 1f / fps;
 			
 			if (rate < mDelta)
@@ -33,7 +37,7 @@ public class NPCAnimation : Object
 					mIndex = 0;
 					enabled = mLoop;
 				}
-				
+
 				if (enabled)
 				{
 					spriteRenderer.sprite = mSprites[mIndex];
@@ -64,5 +68,6 @@ public class NPCAnimation : Object
 		mIndex = 0;
 		mDelta = 0;
 		spriteRenderer.sprite = mSprites.Count > 0 ? mSprites[mIndex] : null;
+		lastTime = Time.realtimeSinceStartup;
 	}
 }

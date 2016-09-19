@@ -12,7 +12,7 @@ public class GameGUI : MonoBehaviour {
 	BoatEnergy boatEnergy;
 
 	void Start() {
-		BroadcastSystem.defaultBoardcast.AddListener (CollectorScript.CollectCollectionEvent, new BroadcastSystem.Callback (CollectionEvent));
+		BroadcastSystem.defaultBoardcast.AddListener (HamsterScript.CollectCollectionEvent, new BroadcastSystem.Callback (CollectionEvent));
 		boatEnergy = GetComponent<BoatEnergy> ();
 	}
 

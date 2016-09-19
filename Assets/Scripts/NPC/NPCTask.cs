@@ -35,6 +35,7 @@ public class NPCTask : MonoBehaviour {
 	public bool animationEnabled = false;
 	public int animationFPS = 10;
 	public bool animationLoop = true;
+	[SerializeField]
 	public List<Sprite> animationSprites = new List<Sprite>();
 
 	NPCTaskStatus m_status = NPCTaskStatus.NotStarted;

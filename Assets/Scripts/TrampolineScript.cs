@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class TrampolineScript : MonoBehaviour {
+	public bool hitOnlyOnce = false;  // 只允许弹跳一次
 	public bool relativeDirection = true;
 	[Range(0, 360)]
 	public float direction = 0f;
@@ -11,13 +12,12 @@ public class TrampolineScript : MonoBehaviour {
 	Vector2 srcFlyDirection = Vector2.zero;
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		boat = GameObject.Find ("Player").GetComponent<BoatScript> ();
 		Collider2D collider = GetComponent<Collider2D> ();
 		if (collider != null) {
 			collider.isTrigger = true;
 		}
-
 		BroadcastSystem.defaultBoardcast.AddListener (BoatScript.BoatEndFlyEvent, new BroadcastSystem.Callback (BoatEndFlying));
 	}
 
@@ -26,6 +26,9 @@ public class TrampolineScript : MonoBehaviour {
 		Collider2D collider = GetComponent<Collider2D> ();
 
 		if (collider.IsTouching (boat.LandCollider)) {
+			if (hitOnlyOnce && srcFlyDirection != Vector2.zero) { // 只允许弹跳一次
+				return;
+			}
 			if (srcFlyDirection == Vector2.zero) {
 				srcFlyDirection = boat.flyingDirection;
 			}
@@ -33,7 +36,7 @@ public class TrampolineScript : MonoBehaviour {
 		}
 	}
 
-	void BounceBoat() {
+	public virtual void BounceBoat() {
 		Vector2 d = Vector2.zero;
 		if (relativeDirection) { //相对旋转
 			d = srcFlyDirection;

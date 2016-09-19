@@ -4,10 +4,18 @@ using System.Collections.Generic;
 
 public class NPCScript : MonoBehaviour {
 	// Animation properties
+	[SerializeField]
 	public bool animationEnabled = false;
+	[SerializeField]
 	public int animationFPS = 10;
+	[SerializeField]
 	public bool animationLoop = true;
+	[SerializeField]
 	public List<Sprite> animationSprites = new List<Sprite>();
+	[SerializeField]
+	public SpriteAnimation2D tipDialogue;
+	[SerializeField]
+	public bool reTipble = false;
 
 	new Collider2D collider;
 	NPCAnimation npcAnimation;
@@ -16,7 +24,6 @@ public class NPCScript : MonoBehaviour {
 	List<NPCTask> sendTasks;
 	List<NPCTask> completerTasks;
 	List<NPCTask> reactTaskChain = new List<NPCTask> ();
-
 
 	private static int SortTasksByPriority(NPCTask task1, NPCTask task2) {
 		if (task1.priority < task2.priority) {
@@ -114,6 +121,11 @@ public class NPCScript : MonoBehaviour {
 
 			Time.timeScale = 1;
 		}
+
+		if (reTipble && tipDialogue != null) {
+			tipDialogue.enabled = true;
+			tipDialogue.Reset ();
+		}
 	}
 
 	// 跟NPC对话
@@ -122,7 +134,6 @@ public class NPCScript : MonoBehaviour {
 
 		NPCTask reactTask = null;
 		// 遍历是否有能完成的任务
-
 
 		foreach (NPCTask t in completerTasks) {
 			NPCTask toCompleteTask = null;
@@ -158,13 +169,14 @@ public class NPCScript : MonoBehaviour {
 			NPCTask t = reactTaskChain [i];
 			if (t.npcDialogue != null && t.npcTaskMode == NPCTaskMode.Sender) {
 				interactTask = t;
-				print ("talk about:" + t.taskName);
 			}
 			i--;
 		}
 
 		// 对话
 		if (interactTask != null) {
+			//print ("talk about:" + interactTask.taskName);
+
 			if (interactTask.npcDialogue != null) {
 				interactTask.npcDialogue.talkerNPC = this;
 				interactTask.npcDialogue.TalkDialogues ();
@@ -172,6 +184,15 @@ public class NPCScript : MonoBehaviour {
 			}
 			if (interactTask.animationEnabled) {
 				PlayNPCAnimation (interactTask);
+			}
+		}
+
+
+		if (tipDialogue != null) {
+			if (tipDialogue.enabled) {
+				tipDialogue.enabled = false;
+				SpriteRenderer sr = tipDialogue.GetComponent<SpriteRenderer> ();
+				sr.sprite = null;
 			}
 		}
 	}

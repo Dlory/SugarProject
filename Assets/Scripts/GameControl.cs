@@ -4,27 +4,29 @@ using System.Collections.Generic;
 
 public class GameControl : MonoBehaviour {
 	public GameObject Ripple;
+	public GameObject controlTrail;
+	public GameObject dragRippleAnimatorObj;
+
 	[Range(0,1)]
 	public float minRippleScale = 0.35f;
 	public float maxImpact = 6f;
-	public float accumulateTime = 1f; //蓄到最大力的时间
-	public float spawnPathPointBetween = 1f;
-	public int flowLastRippleCount = 8; 
-	public GameObject controlTrail;
+	public float accumulateTime = 0.5f; //蓄到最大力的时间
+
+	public float dragPointsMinPixel = 10f;
+	public float dragForce = 0.5f;
 
 	[HideInInspector]
 	public bool dialogueTalkMode = false;
 	BoatScript boat;
+	DragRippleControl dragRippleControl;
 	Camera mainCamera;
 
 	int layerWater;
 	int layerPlayer;
 	int layerBank;
-
 	int detectLayer;
-	Collider2D detectCollider;
-	GameObject liveControlTrail;
 
+	GameObject liveControlTrail;
 	float touchDownSinceTime;
 	List<Vector2> points = new List<Vector2>();
 
@@ -53,6 +55,10 @@ public class GameControl : MonoBehaviour {
 		layerWater = LayerMask.NameToLayer ("WaterTap");
 		layerBank = LayerMask.NameToLayer ("Bank");
 		boat = GameObject.FindGameObjectWithTag ("Player").GetComponent<BoatScript> ();
+
+		GameObject dragRippleObj = new GameObject ("DragRippleControl");
+		dragRippleControl = dragRippleObj.AddComponent<DragRippleControl> ();
+		dragRippleControl.dragRippleAnimatorObj = this.dragRippleAnimatorObj;
 	}
 
 	RippleScript SplashRipple(Vector2 hitPoint, float impact, float splashRotate) {
@@ -66,11 +72,6 @@ public class GameControl : MonoBehaviour {
 				ripple.SplashRotated (Mathf.Deg2Rad * splashRotate);
 			}
 			return ripple;
-
-//			if (prevPoint != Vector2.zero && (Mathf.Abs(prevPoint.x - hitPoint.x) > SpawnMinDistanceX || Mathf.Abs(prevPoint.y - hitPoint.y) > SpawnMinDistanceY)) {
-//				float angle = AngleBetweenVector2 (prevPoint, hitPoint);
-//				ripple.SplashRotated (Mathf.Deg2Rad * angle);
-//			}
 		}
 		return null;
 	}
@@ -83,12 +84,11 @@ public class GameControl : MonoBehaviour {
 
 	void ResetVariables(){
 		detectLayer = -1;
-		detectCollider = null;
 		points.Clear();
 	}
 
-	void SplashWater (Vector2 worldPosition, float impact, float splashRotate) {
-		if (detectLayer != layerWater) return;
+	RippleScript SplashWater (Vector2 worldPosition, float impact, float splashRotate) {
+		if (detectLayer != layerWater) return null;
 
 		//滑动水面
 		Vector2 pos = worldPosition;
@@ -97,7 +97,16 @@ public class GameControl : MonoBehaviour {
 
 		if (hitWater.collider != null && hitBank.collider == null) {
 			Vector2 hitPoint = hitWater.point;
-			SplashRipple (hitPoint, impact, splashRotate);
+			return SplashRipple (hitPoint, impact, splashRotate);
+		}
+		return null;
+	}
+
+	void TryDragRipple() {
+		if (points.Count > 2) {
+			Vector2 point = points [points.Count - 1];
+			Vector2 lastPoint = points [points.Count - 2];
+			dragRippleControl.DargToPoint (mainCamera.ScreenToWorldPoint (point), mainCamera.ScreenToWorldPoint (lastPoint), dragForce);
 		}
 	}
 
@@ -109,11 +118,12 @@ public class GameControl : MonoBehaviour {
 		}
 		ResetVariables ();
 
-		bool detectNPC = false;
 		Vector2 pos = mainCamera.ScreenToWorldPoint (finger.ScreenPosition);
 		Collider2D[] colliders = Physics2D.OverlapPointAll (pos);
 		int[] layerOrders = new int[]{layerPlayer, layerBank, layerWater };
 
+		bool detectNPC = false;
+		Collider2D detectCollider = null;
 		foreach (int layer in layerOrders) {
 			foreach (Collider2D c in colliders) {
 				if (c.GetComponent<NPCScript> () != null) {
@@ -155,30 +165,27 @@ public class GameControl : MonoBehaviour {
 		}
 
 		Vector2 hitPoint = mainCamera.ScreenToWorldPoint (finger.ScreenPosition);
-		if (detectLayer == layerPlayer && (boat.Status == BoatStatus.Normal) && Vector2.Distance (points[points.Count - 1], hitPoint) < 0.5f) {
+		if (detectLayer == layerPlayer && (boat.Status == BoatStatus.Normal) && Vector2.Distance (points[points.Count - 1], finger.ScreenPosition) < 10) {
 			boat.AnnoyingAnimation ();
 		} else if (detectLayer == layerWater) {
 			float impact = (Time.timeSinceLevelLoad - touchDownSinceTime) * 1f/accumulateTime * maxImpact;
 			impact = Mathf.Clamp (impact, minRippleScale * maxImpact, maxImpact);
 
 			Vector2 lastPoint = points [points.Count - 1];
-			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (hitPoint)) > spawnPathPointBetween) {
+			Vector2 point = finger.ScreenPosition;
+			if (Vector2.Distance (lastPoint, point) >= dragPointsMinPixel) {
 				points.Add (finger.ScreenPosition);
 			}
-
-			if (points.Count > flowLastRippleCount) {
-				points.RemoveRange (0, points.Count - flowLastRippleCount);
-			}
-//			points.RemoveRange (0, points.Count - 1);
-
-			for (int i = 0; i < points.Count; i++) {
-				Vector2 p = points [i];
-				float rotate = float.MaxValue;
-				if (i > 0) {
-					rotate = AngleBetweenVector2 (points [i - 1], p);
+			if (points.Count <= 2) {
+				for (int i = 0; i < points.Count; i++) {
+					Vector2 p = points [i];
+					float rotate = float.MaxValue;
+					if (i > 0) {
+						rotate = AngleBetweenVector2 (points [i - 1], p);
+					}
+					//float scale = (float)(i) / points.Count * 0.5f + 0.5f;
+					SplashWater (mainCamera.ScreenToWorldPoint(p), impact * 1, rotate);
 				}
-				float scale = (float)(i) / points.Count * 0.5f + 0.5f;
-				SplashWater (mainCamera.ScreenToWorldPoint(p), impact * 1, rotate);
 			}
 			FadeInControlTrail ();
 		}
@@ -190,14 +197,16 @@ public class GameControl : MonoBehaviour {
 
 		Vector2 lastPoint = points [points.Count - 1];
 		Vector2 point = finger.ScreenPosition;
+
 		if (detectLayer == layerPlayer && boat.Status != BoatStatus.Flying) {
-			if (Vector2.Distance (points[0], point) > 2f && boat.flyable) {
+			if (Vector2.Distance (points[0], point) >= 100f && boat.flyable) {
 				boat.FlyToDirection (point - points[0]);
 			}
 		} else if (detectLayer == layerWater) {
 			// 滑动水面
-			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (point)) > spawnPathPointBetween) {
+			if (Vector2.Distance (lastPoint, point) >= dragPointsMinPixel) {
 				points.Add (point);
+				TryDragRipple ();
 			}
 			liveControlTrail.transform.position = ConvertControlTrailPosition(finger.ScreenPosition);
 		}
@@ -209,8 +218,9 @@ public class GameControl : MonoBehaviour {
 		if (detectLayer == layerWater) {
 			Vector2 lastPoint = points [points.Count - 1];
 			Vector2 point = finger.ScreenPosition;
-			if (Vector2.Distance (mainCamera.ScreenToWorldPoint (lastPoint), mainCamera.ScreenToWorldPoint (point)) > spawnPathPointBetween) {
+			if (Vector2.Distance (lastPoint, point) >= dragPointsMinPixel) {
 				points.Add (point);
+				TryDragRipple ();
 			}
 			liveControlTrail.transform.position = ConvertControlTrailPosition(finger.ScreenPosition);
 		}

@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 461498}
   - 95: {fileID: 9552542}
   - 212: {fileID: 21263284}
-  - 114: {fileID: 11405290}
+  - 114: {fileID: 11400402}
   m_Layer: 12
   m_Name: WaterSpot
   m_TagString: Untagged
@@ -48,7 +48,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11405290
+--- !u!114 &11400402
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 150124}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8370fb499e331b44ebd350f0a858710e, type: 3}
+  m_Script: {fileID: 11500000, guid: 400be5205c1ca5d4d954d19f7ccc50ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &21263284

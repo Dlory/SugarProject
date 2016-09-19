@@ -33,14 +33,16 @@ public class RippleScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		float time = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-		float percent = Mathf.Abs (time - Mathf.Floor(time));
-		float edgeImpact = _initImpact * (1f - Mathf.Clamp (ImpactDamping, 0, 1));
-		Impact = (1-percent) * (_initImpact - edgeImpact) + edgeImpact ;
+		if (_colliderTransform.gameObject.activeSelf) {
+			float time = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+			float percent = Mathf.Abs (time - Mathf.Floor(time));
+			float edgeImpact = _initImpact * (1f - Mathf.Clamp (ImpactDamping, 0, 1));
+			Impact = (1-percent) * (_initImpact - edgeImpact) + edgeImpact ;
 
-		// 线性放大Collider
-		float scale =  (- percent * percent + 2 * percent) * 1.1f;
-		_colliderTransform.localScale = new Vector3 (scale, scale, 1);
+			// 线性放大Collider
+			float scale =  (- percent * percent + 2 * percent) * 1.1f;
+			_colliderTransform.localScale = new Vector3 (scale, scale, 1);
+		}
 	}
 
 	public void SplashRotated(float rotation) {

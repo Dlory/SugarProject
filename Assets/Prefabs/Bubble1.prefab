@@ -9,10 +9,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 456996}
   - 212: {fileID: 21297566}
-  - 58: {fileID: 5894904}
   - 114: {fileID: 11416538}
   - 95: {fileID: 9598042}
   - 114: {fileID: 11469508}
+  - 60: {fileID: 6022168}
   m_Layer: 0
   m_Name: Bubble1
   m_TagString: Untagged
@@ -27,14 +27,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 134816}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -78.99, y: -35.82, z: 0}
+  m_LocalPosition: {x: -25.013, y: -45.016, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &5894904
-CircleCollider2D:
+--- !u!60 &6022168
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -42,11 +42,21 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 1
-  m_Offset: {x: -0.005, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.36417007
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: -0.3214569, y: 0.18949127}
+      - {x: -0.17313004, y: 0.31904984}
+      - {x: 0.008462906, y: 0.35349274}
+      - {x: 0.21178818, y: 0.31324768}
+      - {x: 0.36867142, y: 0.11392212}
+      - {x: 0.3581314, y: -0.118270874}
+      - {x: 0.121673584, y: -0.3287773}
+      - {x: -0.14969826, y: -0.34410477}
+      - {x: -0.34047127, y: -0.20614243}
+      - {x: -0.38684845, y: 0.017795563}
 --- !u!95 &9598042
 Animator:
   serializedVersion: 3

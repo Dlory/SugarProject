@@ -41,6 +41,15 @@ public class NPCScriptEditor : Editor
 				true);
 		}
 
+		EditorGUILayout.HelpBox ("对话", MessageType.None, true);
+		EditorGUILayout.PropertyField (
+			m_object.FindProperty ("tipDialogue"), 
+			new GUIContent ("提示动画", "TipDialogue"),
+			false);
+		if (m_target.tipDialogue != null) {
+			m_target.reTipble = EditorGUILayout.Toggle ("对话完后继续提示", m_target.reTipble);
+		}
+
 		m_object.ApplyModifiedProperties ();
 	}
 }

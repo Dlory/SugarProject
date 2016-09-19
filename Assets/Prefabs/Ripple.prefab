@@ -27,7 +27,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 499418}
   - 60: {fileID: 6080362}
-  - 114: {fileID: 11443758}
   m_Layer: 4
   m_Name: Collider
   m_TagString: Ripple
@@ -118,17 +117,6 @@ MonoBehaviour:
   isInterferenceRipple: 0
   ImpactDamping: 0.4
   RippleScale: 1.5
---- !u!114 &11443758
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 194234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &21222148
 SpriteRenderer:
   m_ObjectHideFlags: 1

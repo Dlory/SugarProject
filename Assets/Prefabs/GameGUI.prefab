@@ -48,12 +48,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ripple: {fileID: 158500, guid: cdde08d0a34f9d4419f67daeebe4f1ab, type: 2}
+  controlTrail: {fileID: 166858, guid: ca697ce1e73704545a1baa3acf92caa0, type: 2}
+  dragRippleAnimatorObj: {fileID: 163352, guid: 06fe31a98f8c60347bcf0eebeedea559,
+    type: 2}
   minRippleScale: 0.35
   maxImpact: 6
   accumulateTime: 1
-  spawnPathPointBetween: 1
-  flowLastRippleCount: 8
-  controlTrail: {fileID: 166858, guid: ca697ce1e73704545a1baa3acf92caa0, type: 2}
+  dragPointsMinPixel: 50
   dialogueTalkMode: 0
 --- !u!114 &11453504
 MonoBehaviour:

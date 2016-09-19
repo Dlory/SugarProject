@@ -41,15 +41,15 @@ public class BoatScript : MonoBehaviour {
 			return false;
 		}
 	}
-	[HideInInspector]
-	public float flayingAltitude = 0;
 
 	Animator HamsterAnim;
 	Animator ShadowAnim;
 	Rigidbody2D Rigidbody2D;
-	FlyingSimulator FlyingSim;
-	MagicCircle magicCircle;
 	Collider2D touchingMagicArea;
+
+	MagicCircle magicCircle;
+	FlyingSimulator FlyingSim;
+	HamsterScript hamsterScript;
 
 	BoatStatus m_AnimationStatus = BoatStatus.Normal;
 	float m_ParabolaAnimationSpeed = 0f;
@@ -66,11 +66,14 @@ public class BoatScript : MonoBehaviour {
 	public Vector2 flyingDirection = Vector2.zero;
 	[HideInInspector]
 	public Vector3 flyingSrcPos = Vector3.zero;
+	[HideInInspector]
+	public float flyingAltitude = 0;
 
 	void Start() {
 		LandCollider = this.GetComponent<Collider2D> ();
 		Rigidbody2D = this.GetComponent<Rigidbody2D> ();
 		magicCircle = GetComponentInChildren<MagicCircle> ();
+		hamsterScript = GetComponentInChildren<HamsterScript> ();
 		HamsterSnoreMaxInterval = Mathf.Max (HamsterSnoreMinInterval, HamsterSnoreMaxInterval);
 
 		HamsterAnim = HamsterSprite.GetComponent<Animator> ();
@@ -100,6 +103,7 @@ public class BoatScript : MonoBehaviour {
 
 	void Update(){
 		UpdateAnimationIfNeedly ();
+		ShadowSprite.transform.eulerAngles = new Vector3 (0, 0, -HamsterSprite.transform.eulerAngles.z);
 
 		// 根据当前速度动态转换
 		if (Status == BoatStatus.Normal) {
@@ -135,7 +139,7 @@ public class BoatScript : MonoBehaviour {
 			Vector3 pos = paraPos + Quaternion.AngleAxis (-45, Vector3.right) * new Vector3 (0, -flyingHeight, 0);
 			transform.position = pos;
 			HamsterSprite.transform.position = paraPos;
-			this.flayingAltitude = flyingHeight;
+			this.flyingAltitude = flyingHeight;
 
 			// 根据抛物线高度动态改变阴影大小
 			float scale = 1f;
@@ -198,6 +202,11 @@ public class BoatScript : MonoBehaviour {
 					float impact = script.Impact;
 					Vector3 force = impact * (transform.position - other.gameObject.transform.position).normalized;
 					UpdateVelocityByCombineNewForce (new Vector2 (force.x, force.y));
+
+					hamsterScript.rotationMultiplier = other.transform.position.x > hamsterScript.transform.position.x ? 1 : -1f;
+					int shake = Animator.StringToHash ("Shake");
+					HamsterAnim.ResetTrigger (shake);
+					HamsterAnim.SetTrigger (shake);
 				}
 			}
 			if (magicArea != null) {
