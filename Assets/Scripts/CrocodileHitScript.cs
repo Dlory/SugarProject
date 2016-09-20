@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class CrocodileHitScript : TrampolineScript {
+	public GameObject Fragment;
 	new void Start(){
 		base.Start ();
 
@@ -15,6 +16,10 @@ public class CrocodileHitScript : TrampolineScript {
 		Crocodile crocodile = GetComponent<Crocodile> ();
 		if (crocodile.currentStatus != CrocodileStatus.Crush) {
 			crocodile.PlayAnimation (CrocodileStatus.Crush);
+			if (!Fragment.active) {
+				Fragment.SetActive (true);
+				Fragment.GetComponent<Animator>().SetTrigger ("Spit");
+			}
 		}
 	}
 }

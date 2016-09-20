@@ -73,9 +73,9 @@ public class Crocodile : MonoBehaviour {
 			animator.SetTrigger("Crush");
 			if (!Fragment.active) {
 				Fragment.SetActive (true);
-				FragmentAnimator.SetTrigger ("Spit");
-			}
-			*/
+				Fragment.GetComponent<Animator>().SetTrigger ("Spit");
+			}*/
+
 		}
 	}
 

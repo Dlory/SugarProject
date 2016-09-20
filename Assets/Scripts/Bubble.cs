@@ -61,13 +61,13 @@ public class Bubble : MonoBehaviour {
 		Vector3 myPosition = gameObject.transform.position;
 		Vector3 playerPosition = g.transform.position;
 		Vector3 direction = (myPosition - playerPosition).normalized;
-		iTween.MoveTo (gameObject,iTween.Hash("position",myPosition + direction*2,"time",0.75f,"easetype",iTween.EaseType.easeOutQuart));
+		iTween.MoveTo (gameObject,iTween.Hash("position",myPosition + direction*1,"time",0.5f,"easetype",iTween.EaseType.easeOutQuart));
 		gameObject.transform.SetParent (g.transform);
 	}
 
 	public void BubbleToCircle(){
 		Debug.Log ("test");
 		//iTween.MoveTo (gameObject, iTween.Hash ("position", new Vector3 (1, 1, 0), "time", 1));
-		transform.DOLocalMove(new Vector3(1,1,0),1);
+		transform.DOLocalMove(new Vector3(Random.Range(-3,3),Random.Range(-1.7f,0.5f),0),1);
 	}
 }
